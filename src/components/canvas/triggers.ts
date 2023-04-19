@@ -7,7 +7,8 @@ class Trigger {
         this.paper = canvas.querySelector('.paper') as HTMLDivElement;
         this.disableDefaultBrowserZoom();
         this.scale();
-        this.positionPaper();
+        // theres a bug with this
+        // this.positionPaper();
     }
 
     disableDefaultBrowserZoom() {
@@ -51,6 +52,9 @@ class Trigger {
 
             // Set the draggable element to be positioned absolutely
             draggableElement.style.position = 'absolute';
+
+            // Disable CSS transitions while dragging
+            draggableElement.style.transition = 'none';
         });
 
         draggableElement.addEventListener('mousemove', (event) => {
@@ -60,7 +64,7 @@ class Trigger {
                 const newX = event.clientX - offsetX;
                 const newY = event.clientY - offsetY;
 
-                // Set the position of the draggable element
+                // Set the position of the draggable element using transitions
                 draggableElement.style.left = `${newX}px`;
                 draggableElement.style.top = `${newY}px`;
             }
@@ -73,10 +77,20 @@ class Trigger {
             const relativeX = draggableRect.left - containerRect.left;
             const relativeY = draggableRect.top - containerRect.top;
 
-            // Set the position of the draggable element relative to the container
+            // Set the position of the draggable element relative to the container using transitions
+            draggableElement.style.transition = 'left 0.1s linear, top 0.1s linear';
             draggableElement.style.position = 'relative';
             draggableElement.style.left = `${relativeX}px`;
             draggableElement.style.top = `${relativeY}px`;
+
+            // Remove the transitions once they have finished
+            draggableElement.addEventListener(
+                'transitionend',
+                () => {
+                    draggableElement.style.transition = 'none';
+                },
+                { once: true },
+            );
         });
     }
 
@@ -88,24 +102,24 @@ class Trigger {
         };
         let scaleKey = 1;
         // Add keydown and keyup event listeners to the window object
-        window.addEventListener("keydown", event => {
-          // Check if the Control key is pressed
-          if (event.ctrlKey) {
-            // The Control key is pressed
-            if (event.key === "+" || event.keyCode === 187 || event.keyCode === 107) {
-              // The + key is pressed
-              // Increase the scale factor by 0.1
-              scaleKey += 0.1;
-            } else if (event.key === "-" || event.keyCode === 189 || event.keyCode === 109) {
-              // The - key is pressed
-              // Decrease the scale factor by 0.1
-              scaleKey -= 0.1;
+        window.addEventListener('keydown', (event) => {
+            // Check if the Control key is pressed
+            if (event.ctrlKey) {
+                // The Control key is pressed
+                if (event.key === '+' || event.keyCode === 187 || event.keyCode === 107) {
+                    // The + key is pressed
+                    // Increase the scale factor by 0.1
+                    scaleKey += 0.1;
+                } else if (event.key === '-' || event.keyCode === 189 || event.keyCode === 109) {
+                    // The - key is pressed
+                    // Decrease the scale factor by 0.1
+                    scaleKey -= 0.1;
+                }
+
+                // Apply the new scale factor to the element
+                scaleKey = Math.max(defineScales.min, Math.min(defineScales.max, scaleKey));
+                this.paper.style.transform = `scale(${scaleKey})`;
             }
-        
-            // Apply the new scale factor to the element
-            scaleKey = Math.max(defineScales.min, Math.min(defineScales.max, scaleKey));
-            this.paper.style.transform = `scale(${scaleKey})`;
-          }
         });
         this.canvas.addEventListener('mousewheel', (event) => {
             console.log(event);
@@ -119,7 +133,6 @@ class Trigger {
                 // Calculate the new zoom scale based on the direction of the scroll
                 let newScale = (event as WheelEvent).deltaY > 0 ? currentScale * 0.8 : currentScale * 1.2;
 
-                
                 newScale = Math.max(defineScales.min, Math.min(defineScales.max, newScale));
 
                 // Apply the new zoom scale to the element
