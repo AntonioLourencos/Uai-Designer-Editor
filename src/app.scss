@@ -151,6 +151,8 @@ body {
 
 #canvas {
     display: flex;
+    overflow: hidden;
+    position: relative;
     background-color: #ccc;
     width: 80%;
     justify-content: center;

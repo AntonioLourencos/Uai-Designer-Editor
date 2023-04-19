@@ -67,7 +67,7 @@ class CtxMenuOptions {
 <template>
     <div class="top panel">
         <a href="/">
-            <div class="logo">Uai Designer Editor</div>
+            <div class="logo">Uai Design Editor</div>
         </a>
         <div class="buttons">
             <div class="button icon" title="Inserir forma">
