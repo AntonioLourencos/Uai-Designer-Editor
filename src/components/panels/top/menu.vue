@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import domtoimage from 'dom-to-image';
-import { ElementType } from '../../../store/elements';
+import { ElementD, ElementType } from '../../../store/elements';
 import useElementsStore from '../../../store/elements';
 import { onMounted, ref } from 'vue';
 import Archive from '../../../utils/Archive';
 import { blob } from 'stream/consumers';
+import convertCSSProperties from '../../../utils/convertCSSProperties';
 
 const ctxMenu = ref<number | undefined>(undefined);
 
@@ -53,8 +54,8 @@ class CtxMenuOptions {
                 useElementsStore().insertElement({ type: 'text', text: 'Insira seu texto...' });
                 break;
             case 'circle':
-                useElementsStore().insertElement({ type: 'circle'});
-            break;
+                useElementsStore().insertElement({ type: 'circle' });
+                break;
         }
     }
 
@@ -103,9 +104,40 @@ class CtxMenuOptions {
     }
 
     static saveProject() {
+        // save element properties on store
+        const elements = document.querySelectorAll('.element');
+        elements.forEach(element => {
+            let target = element as HTMLDivElement;
+            const id = target.dataset.id;
+            useElementsStore().setElementStyle(parseInt(id!), convertCSSProperties(target.style));
+        });
         const data = useElementsStore().elements;
-        const blobData = Archive.createBlob(JSON.stringify(data), 'application/json');
-        Archive.download(`UAIDesign_${Date.now()}`, 'json', blobData);
+        const blobData = Archive.createBlob(JSON.stringify({elements: data}), 'application/json');
+        Archive.download(`UAIDesign_${Date.now()}`, 'uai', blobData);
+    }
+
+    static openProject() {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.click();
+        input.addEventListener('change', () => {
+            const file = input!.files![0];
+            // Check if the file has a .json extension
+            if (file.name.endsWith('.uai')) {
+                const reader = new FileReader();
+                reader.readAsText(file);
+                reader.onload = () => {
+                    const fileContent = reader.result;
+                    const jsonData = JSON.parse(fileContent as any) as {elements: ElementD[]}; // Parse the JSON data
+                    const store = useElementsStore();
+                    jsonData.elements.forEach(element => {
+                        store.insertElement(element);
+                    })
+                };
+            } else {
+                window.alert('Por favor selecione um arquivo com a extensão "uai".');
+            }
+        });
     }
 }
 </script>
@@ -119,28 +151,30 @@ class CtxMenuOptions {
             <div class="button icon" title="Inserir texto">
                 <img src="assets/icons/Text.svg" draggable="false" />
             </div>
-            
-    
+
             <div class="ctx-menu" :style="{ display: ctxMenu == 0 ? 'block' : 'none' }">
                 <li :onclick="() => CtxMenuOptions.insertShape('rectangle')">Retângulo</li>
                 <li :onclick="() => CtxMenuOptions.insertShape('circle')">Círculo</li>
             </div>
-    
+
             <div class="ctx-menu" :style="{ display: ctxMenu == 1 ? 'block' : 'none' }">
                 <li :onclick="() => CtxMenuOptions.insertShape('text')">Inserir texto</li>
             </div>
-    
         </div>
         <div class="right">
             <div class="button icon no-ctx" :onclick="CtxMenuOptions.saveProject" title="Salvar projeto">
                 <i class="fas fa-save"></i>
             </div>
 
+            <div class="button icon no-ctx" title="Importar projeto" :onclick="CtxMenuOptions.openProject">
+                <i class="fas fa-upload"></i>
+            </div>
+
             <div class="button icon" title="Exportar">
                 <i class="fas fa-download"></i>
             </div>
 
-            <div class="ctx-menu" :style="{ display: ctxMenu == 3 ? 'block' : 'none' }">
+            <div class="ctx-menu" :style="{ display: ctxMenu == 4 ? 'block' : 'none' }">
                 <li :onclick="() => CtxMenuOptions.export('png')">Exportar PNG</li>
                 <li :onclick="() => CtxMenuOptions.export('svg')">Exportar SVG</li>
                 <li :onclick="() => CtxMenuOptions.export('jpeg')">Exportar JPEG</li>

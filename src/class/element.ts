@@ -1,6 +1,7 @@
 //@ts-ignore
 import resizer from 'move-rotate-resizer';
 import useElementsStore from '../store/elements';
+import convertCSSProperties from '../utils/convertCSSProperties';
 
 class DefineElement {
     target: string;
@@ -11,11 +12,7 @@ class DefineElement {
     }
 
     saveElementChanges(id: number, style: CSSStyleDeclaration) {
-        const cssProperties: any = {};
-        for (let i = 0; i < style.length; i++) {
-            const propertyName = style[i];
-            cssProperties[propertyName] = style.getPropertyValue(propertyName);
-        }
+        const cssProperties = convertCSSProperties(style);
         useElementsStore().setElementStyle(id, cssProperties);
     }
 
@@ -24,10 +21,6 @@ class DefineElement {
         resizer.add(targetEl, {
             minWidth: 5,
             minHeight: 5,
-            onDragEnd: (e: DragEvent) => {
-                const target = (e as any).evtTarget as HTMLDivElement;
-                this.saveElementChanges(parseInt(target.dataset.id!), target.style);
-            },
         });
     }
 }
