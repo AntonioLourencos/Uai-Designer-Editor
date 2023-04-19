@@ -11,7 +11,6 @@ class Trigger {
     }
 
     disableDefaultBrowserZoom() {
-
         document.addEventListener('keydown', function (e) {
             if (
                 true &&
@@ -82,7 +81,34 @@ class Trigger {
     }
 
     scale() {
+        // define min max scale
+        const defineScales = {
+            min: 0.5,
+            max: 1.04004,
+        };
+        let scaleKey = 1;
+        // Add keydown and keyup event listeners to the window object
+        window.addEventListener("keydown", event => {
+          // Check if the Control key is pressed
+          if (event.ctrlKey) {
+            // The Control key is pressed
+            if (event.key === "+" || event.keyCode === 187 || event.keyCode === 107) {
+              // The + key is pressed
+              // Increase the scale factor by 0.1
+              scaleKey += 0.1;
+            } else if (event.key === "-" || event.keyCode === 189 || event.keyCode === 109) {
+              // The - key is pressed
+              // Decrease the scale factor by 0.1
+              scaleKey -= 0.1;
+            }
+        
+            // Apply the new scale factor to the element
+            scaleKey = Math.max(defineScales.min, Math.min(defineScales.max, scaleKey));
+            this.paper.style.transform = `scale(${scaleKey})`;
+          }
+        });
         this.canvas.addEventListener('mousewheel', (event) => {
+            console.log(event);
             if ((event as WheelEvent).ctrlKey) {
                 console.log('Scale event', event);
                 // Get the current zoom scale
@@ -93,11 +119,7 @@ class Trigger {
                 // Calculate the new zoom scale based on the direction of the scroll
                 let newScale = (event as WheelEvent).deltaY > 0 ? currentScale * 0.8 : currentScale * 1.2;
 
-                // define min max scale
-                const defineScales = {
-                    min: 0.5,
-                    max: 1.04004,
-                };
+                
                 newScale = Math.max(defineScales.min, Math.min(defineScales.max, newScale));
 
                 // Apply the new zoom scale to the element
