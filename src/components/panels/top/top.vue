@@ -49,17 +49,43 @@ class CtxMenuOptions {
         }
     }
 
-    static exportPng() {
+    static export(type: 'svg' | 'png' | 'jpeg') {
         const paper = document.querySelector('.paper') as Element;
-        domtoimage.toPng(paper)
-            .then(response => {
-                const link = document.createElement('a');
-                link.download = `UAIDesign_${Date.now()}.png`;
-                link.href = response;
-                link.click()
-                console.log(response)
-            })
-            .catch(err => console.log(err));
+
+        switch (type) {
+            case 'jpeg':
+                domtoimage
+                    .toJpeg(paper)
+                    .then((response) => {
+                        createLink(response, 'jpg');
+                    })
+                    .catch((err) => console.log(err));
+                break;
+            case 'svg':
+                domtoimage
+                    .toSvg(paper)
+                    .then((response) => {
+                        createLink(response, 'svg');
+                    })
+                    .catch((err) => console.log(err));
+                break;
+            case 'png':
+            default:
+                domtoimage
+                    .toPng(paper)
+                    .then((response) => {
+                        createLink(response, 'png');
+                    })
+                    .catch((err) => console.log(err));
+        }
+
+        const createLink = (response: any, type: 'svg' | 'png' | 'jpg') => {
+            const link = document.createElement('a');
+            link.download = `UAIDesign_${Date.now()}.${type}`;
+            link.href = response;
+            link.click();
+            console.log(response);
+        };
     }
 }
 </script>
@@ -90,7 +116,9 @@ class CtxMenuOptions {
             </div>
 
             <div class="ctx-menu" :style="{ display: ctxMenu == 2 ? 'block' : 'none' }">
-                <li :onclick="() => CtxMenuOptions.exportPng()">Exportar PNG</li>
+                <li :onclick="() => CtxMenuOptions.export('png')">Exportar PNG</li>
+                <li :onclick="() => CtxMenuOptions.export('svg')">Exportar SVG</li>
+                <li :onclick="() => CtxMenuOptions.export('jpeg')">Exportar JPEG</li>
             </div>
         </div>
     </div>

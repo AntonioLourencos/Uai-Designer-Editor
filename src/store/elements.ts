@@ -1,16 +1,21 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
 
-interface Element {
+interface ElementD {
     type: ElementType
 }
 
 type ElementType = 'rectangle' | 'line';
 
 const useElementsStore = defineStore('elements', () => {
-    const elements = ref<Element[]>([]);
+    const elements = ref<ElementD[]>([]);
+    const selectedElement = ref<Element | undefined>(undefined);
 
-    function insertElement(action: Element) {
+    function setSelectedElement() {
+        
+    }
+    
+    function insertElement(action: ElementD) {
         elements.value.push(action);
     }
 
@@ -24,5 +29,5 @@ const useElementsStore = defineStore('elements', () => {
     return {elements, insertElement, removeElement}
 });
 
-export type {Element, ElementType};
+export type {ElementD, ElementType};
 export default useElementsStore;
