@@ -52,6 +52,11 @@ class CtxMenuOptions {
     static export(type: 'svg' | 'png' | 'jpeg') {
         const paper = document.querySelector('.paper') as Element;
 
+        // remove active element style
+        document.querySelectorAll('.element').forEach(element => {
+            element.classList.remove('active');
+        });
+
         switch (type) {
             case 'jpeg':
                 domtoimage

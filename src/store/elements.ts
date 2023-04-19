@@ -9,10 +9,10 @@ type ElementType = 'rectangle' | 'line';
 
 const useElementsStore = defineStore('elements', () => {
     const elements = ref<ElementD[]>([]);
-    const selectedElement = ref<Element | undefined>(undefined);
+    const selectedElementIdx = ref<string | undefined>(undefined);
 
-    function setSelectedElement() {
-        
+    function setSelectedElement(index: string | undefined) {
+        selectedElementIdx.value = index;
     }
     
     function insertElement(action: ElementD) {
@@ -26,7 +26,7 @@ const useElementsStore = defineStore('elements', () => {
         }
     }
 
-    return {elements, insertElement, removeElement}
+    return {elements, selectedElementIdx, insertElement, removeElement, setSelectedElement}
 });
 
 export type {ElementD, ElementType};

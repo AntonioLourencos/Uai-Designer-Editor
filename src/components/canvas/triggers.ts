@@ -1,3 +1,5 @@
+import useElementsStore from "../../store/elements";
+
 class Trigger {
     paper: HTMLDivElement;
     canvas: HTMLDivElement;
@@ -7,8 +9,27 @@ class Trigger {
         this.paper = canvas.querySelector('.paper') as HTMLDivElement;
         this.disableDefaultBrowserZoom();
         this.scale();
+        this.activeElement();
         // theres a bug with this
         // this.positionPaper();
+    }
+
+    activeElement() {
+        this.paper.addEventListener('click', () => {
+            useElementsStore().setSelectedElement(undefined);
+        });
+        useElementsStore().$subscribe((mutation, newValue) => {
+            const value = newValue.selectedElementIdx;
+            // detect active element
+            this.paper.querySelectorAll(`.element`).forEach((el) => {
+                const element = el as HTMLDivElement;
+                if(element.dataset.id == value) {
+                    element.classList.add('active');
+                } else {
+                    element.classList.remove('active');
+                }
+            })
+        });
     }
 
     disableDefaultBrowserZoom() {

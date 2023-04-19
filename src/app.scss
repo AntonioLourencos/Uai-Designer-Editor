@@ -167,6 +167,13 @@ body {
         .element {
             display: inline-block;
 
+            &.active {
+                position: relative;
+                outline-offset: 0px;
+                outline: 3px solid #159CFE;
+                z-index: 2;
+            }
+
             &.rectangle {
                 width: 100px;
                 height: 100px;

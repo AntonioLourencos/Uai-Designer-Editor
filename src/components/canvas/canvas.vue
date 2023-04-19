@@ -8,7 +8,7 @@ import DefineElement from '../../class/element';
 const canvas = ref<Element | undefined>(undefined);
 
 const elementsStore = useElementsStore();
-const {elements} = storeToRefs(elementsStore);
+const { elements } = storeToRefs(elementsStore);
 
 onUpdated(() => {
     const index = elements.value.length - 1;
@@ -18,18 +18,23 @@ onUpdated(() => {
 });
 
 onMounted(() => {
-    if(canvas.value) {
+    if (canvas.value) {
         new TriggerEvents(canvas.value as HTMLDivElement);
     }
 });
 
+const setSelectedElement = (e: MouseEvent) => {
+    e.stopPropagation();
+    const target = e.target as HTMLDivElement;
+    useElementsStore().setSelectedElement(target?.dataset?.id);
+};
 </script>
 
 <template>
     <div id="canvas" ref="canvas">
         <div class="paper">
             <template v-for="(item, index) in elements" :key="index">
-                <div class="element" :class="item.type" :data-id="index"></div>
+                <div class="element" :class="[item.type]" :data-id="index" :onmousedown="setSelectedElement" :onclick="setSelectedElement"></div>
             </template>
         </div>
     </div>
