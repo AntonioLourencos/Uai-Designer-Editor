@@ -1,5 +1,6 @@
 //@ts-ignore
 import resizer from 'move-rotate-resizer';
+import useElementsStore from '../store/elements';
 
 class DefineElement {
     target: string;
@@ -11,7 +12,10 @@ class DefineElement {
 
     draggable() {
         const targetEl = document.querySelector(this.target) as HTMLDivElement;
-        resizer.add(targetEl);
+        resizer.add(targetEl, {
+            minWidth: 5,
+            minHeight: 5,
+        });
     }
 }
 

@@ -50,6 +50,9 @@ class CtxMenuOptions {
             case 'text':
                 useElementsStore().insertElement({ type: 'text', text: 'Insira seu texto...' });
                 break;
+            case 'circle':
+                useElementsStore().insertElement({ type: 'circle'});
+            break;
         }
     }
 
@@ -112,6 +115,7 @@ class CtxMenuOptions {
     
             <div class="ctx-menu" :style="{ display: ctxMenu == 0 ? 'block' : 'none' }">
                 <li :onclick="() => CtxMenuOptions.insertShape('rectangle')">Retângulo</li>
+                <li :onclick="() => CtxMenuOptions.insertShape('circle')">Círculo</li>
             </div>
     
             <div class="ctx-menu" :style="{ display: ctxMenu == 1 ? 'block' : 'none' }">

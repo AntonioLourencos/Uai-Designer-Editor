@@ -214,10 +214,15 @@ body {
                 outline: solid 3px #80b9e1 !important;
             }
 
-            &.rectangle {
+            &.rectangle, &.circle {
                 width: 100px;
                 height: 100px;
-                background-color: red;
+                background-color: #487392;
+            }
+
+            &.circle {
+                // clip-path: circle();
+                border-radius: 50%;
             }
         }
     }

@@ -1,21 +1,26 @@
 import { defineStore } from "pinia";
-import { ref } from "vue";
+import { CSSProperties, ref } from "vue";
 
 interface ElementD {
     type: ElementType
+    style?: CSSProperties;
     text?: string;
 }
 
-type ElementType = 'rectangle' | 'line' | 'text';
+type ElementType = 'rectangle' | 'line' | 'text' | 'circle';
 
 const useElementsStore = defineStore('elements', () => {
     const elements = ref<ElementD[]>([]);
     const selectedElementIdx = ref<string | undefined>(undefined);
 
-    function setText(index: number, text: string) {
+    function getElement(index: number) {
         const idx = elements.value.findIndex((el, i) => i == index);
         if(idx >= 0) {
-            elements.value[idx].text = text;
+            return {
+                then: (callback: Function) => {
+                    callback(elements.value[idx]);
+                },
+            }
         }
     }
 
@@ -27,14 +32,19 @@ const useElementsStore = defineStore('elements', () => {
         elements.value.push(action);
     }
 
-    function removeElement(elementIdx: number) {
-        const idx = elements.value.findIndex((el, i) => i == elementIdx);
-        if(idx >= 0) {
-            elements.value.splice(idx, 1)
-        }
+    function removeElement(index: number) {
+        getElement(index)?.then((element: ElementD) => {
+            elements.value.splice(index, 1)
+        });
     }
 
-    return {elements, selectedElementIdx, insertElement, removeElement, setSelectedElement, setText}
+    function setElementStyle(index: number, style: CSSProperties) {
+        getElement(index)?.then((element: ElementD) => {
+            element.style = style;
+        })
+    }
+
+    return {elements, selectedElementIdx, insertElement, removeElement, setSelectedElement, setElementStyle}
 });
 
 export type {ElementD, ElementType};

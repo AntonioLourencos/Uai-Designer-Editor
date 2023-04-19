@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import LayersComponent from './layers.vue';
+
 
 </script>
 
@@ -7,5 +9,6 @@
         <a href="/">
             <div class="logo">Uai Design Editor</div>
         </a>
+        <LayersComponent />
     </div>
 </template>

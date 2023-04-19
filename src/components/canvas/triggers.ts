@@ -10,20 +10,8 @@ class Trigger {
         this.disableDefaultBrowserZoom();
         this.scale();
         this.activeElement();
-        this.textElements();
         // theres a bug with this
         // this.positionPaper();
-    }
-
-    textElements() {
-        useElementsStore().$subscribe((mutation, newValue) => {
-            const textElements = document.querySelectorAll('.element.text textarea');
-            textElements.forEach((element) => {
-                element.addEventListener('click', () => {
-                    
-                })
-            });
-        });
     }
 
     activeElement() {
