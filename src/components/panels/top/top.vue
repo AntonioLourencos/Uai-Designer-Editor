@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { onMounted, onUpdated, ref } from 'vue';
+import { ElementType } from '../../../store/elements';
+import useElementsStore from '../../../store/elements';
 const ctxMenu = ref<number | undefined>(undefined);
 
 onMounted(() => {
@@ -21,15 +23,24 @@ function defineCtxMenuOnClick() {
 
     buttons.forEach((button, index) => {
         button.addEventListener('click', () => {
-            ctxMenu.value = ctxMenu.value == undefined ? index : undefined;
+            ctxMenu.value = ctxMenu.value == undefined ? index : index;
         });   
     });
+
     ctxMenus.forEach(ctxMenuEl => {
         (ctxMenuEl as HTMLDivElement).addEventListener('click', () => {
             ctxMenu.value = undefined;
         })
     })
     
+}
+
+function insertShape(type: ElementType) {
+    switch(type) {
+        case 'rectangle':
+            useElementsStore().insertElement({type: 'rectangle'});
+        break;
+    }
 }
 </script>
 
@@ -47,7 +58,7 @@ function defineCtxMenuOnClick() {
             </div>
 
             <div class="ctx-menu" :style="{display: ctxMenu == 0 ? 'block' : 'none'}">
-                <li>Retângulo</li>
+                <li :onclick="() => insertShape('rectangle')">Retângulo</li>
                 <li>Linha</li>
             </div>
 

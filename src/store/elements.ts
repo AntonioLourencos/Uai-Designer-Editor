@@ -2,8 +2,10 @@ import { defineStore } from "pinia";
 import { ref } from "vue";
 
 interface Element {
-    type: 'rectangle' | 'line'
+    type: ElementType
 }
+
+type ElementType = 'rectangle' | 'line';
 
 const useElementsStore = defineStore('elements', () => {
     const elements = ref<Element[]>([]);
@@ -22,5 +24,5 @@ const useElementsStore = defineStore('elements', () => {
     return {elements, insertElement, removeElement}
 });
 
-export type {Element};
+export type {Element, ElementType};
 export default useElementsStore;
