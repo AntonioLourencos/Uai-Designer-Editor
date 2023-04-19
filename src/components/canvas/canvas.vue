@@ -26,7 +26,8 @@ onMounted(() => {
 const setSelectedElement = (e: MouseEvent) => {
     e.stopPropagation();
     const target = e.target as HTMLDivElement;
-    useElementsStore().setSelectedElement(target?.dataset?.id);
+    let id = (target.localName == 'textarea') ? (target.offsetParent as HTMLDivElement).dataset.id : target?.dataset?.id;
+    useElementsStore().setSelectedElement(id);
 };
 </script>
 

@@ -45,7 +45,7 @@ class Trigger {
 
             const hasAnyActive = Array.from(elements).find((element) => element.classList.contains('myClass'));
             const resizerContainer = document.querySelector('.resizer-container') as HTMLDivElement;
-            if (!hasAnyActive) {
+            if (resizerContainer && !hasAnyActive) {
                 resizerContainer.style.display = 'none';
             }
         });
