@@ -4,7 +4,6 @@ import { ElementD, ElementType } from '../../../store/elements';
 import useElementsStore from '../../../store/elements';
 import { onMounted, ref } from 'vue';
 import Archive from '../../../utils/Archive';
-import { blob } from 'stream/consumers';
 import convertCSSProperties from '../../../utils/convertCSSProperties';
 
 const ctxMenu = ref<number | undefined>(undefined);
