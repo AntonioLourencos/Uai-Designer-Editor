@@ -12,6 +12,7 @@
   "dependencies": {
     "dom-to-image": "^2.6.0",
     "interactjs": "^1.10.17",
+    "move-rotate-resizer": "^1.0.5",
     "pinia": "^2.0.34",
     "vue": "^3.2.47"
   },

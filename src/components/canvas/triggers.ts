@@ -20,15 +20,22 @@ class Trigger {
         });
         useElementsStore().$subscribe((mutation, newValue) => {
             const value = newValue.selectedElementIdx;
+            const elements = this.paper.querySelectorAll(`.element`);
             // detect active element
-            this.paper.querySelectorAll(`.element`).forEach((el) => {
+            elements.forEach((el) => {
                 const element = el as HTMLDivElement;
                 if(element.dataset.id == value) {
                     element.classList.add('active');
                 } else {
                     element.classList.remove('active');
                 }
-            })
+            });
+
+            const hasAnyActive = Array.from(elements).find(element  => element.classList.contains('myClass'));
+            const resizerContainer = document.querySelector('.resizer-container') as HTMLDivElement;
+            if(!hasAnyActive) {
+                resizerContainer.style.display = 'none';
+            }
         });
     }
 
