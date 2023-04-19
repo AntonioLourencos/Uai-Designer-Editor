@@ -3,13 +3,21 @@ import { ref } from "vue";
 
 interface ElementD {
     type: ElementType
+    text?: string;
 }
 
-type ElementType = 'rectangle' | 'line';
+type ElementType = 'rectangle' | 'line' | 'text';
 
 const useElementsStore = defineStore('elements', () => {
     const elements = ref<ElementD[]>([]);
     const selectedElementIdx = ref<string | undefined>(undefined);
+
+    function setText(index: number, text: string) {
+        const idx = elements.value.findIndex((el, i) => i == index);
+        if(idx >= 0) {
+            elements.value[idx].text = text;
+        }
+    }
 
     function setSelectedElement(index: string | undefined) {
         selectedElementIdx.value = index;
@@ -26,7 +34,7 @@ const useElementsStore = defineStore('elements', () => {
         }
     }
 
-    return {elements, selectedElementIdx, insertElement, removeElement, setSelectedElement}
+    return {elements, selectedElementIdx, insertElement, removeElement, setSelectedElement, setText}
 });
 
 export type {ElementD, ElementType};

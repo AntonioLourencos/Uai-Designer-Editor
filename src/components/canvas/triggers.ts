@@ -1,4 +1,4 @@
-import useElementsStore from "../../store/elements";
+import useElementsStore from '../../store/elements';
 
 class Trigger {
     paper: HTMLDivElement;
@@ -10,8 +10,20 @@ class Trigger {
         this.disableDefaultBrowserZoom();
         this.scale();
         this.activeElement();
+        this.textElements();
         // theres a bug with this
         // this.positionPaper();
+    }
+
+    textElements() {
+        useElementsStore().$subscribe((mutation, newValue) => {
+            const textElements = document.querySelectorAll('.element.text textarea');
+            textElements.forEach((element) => {
+                element.addEventListener('click', () => {
+                    
+                })
+            });
+        });
     }
 
     activeElement() {
@@ -24,16 +36,16 @@ class Trigger {
             // detect active element
             elements.forEach((el) => {
                 const element = el as HTMLDivElement;
-                if(element.dataset.id == value) {
+                if (element.dataset.id == value) {
                     element.classList.add('active');
                 } else {
                     element.classList.remove('active');
                 }
             });
 
-            const hasAnyActive = Array.from(elements).find(element  => element.classList.contains('myClass'));
+            const hasAnyActive = Array.from(elements).find((element) => element.classList.contains('myClass'));
             const resizerContainer = document.querySelector('.resizer-container') as HTMLDivElement;
-            if(!hasAnyActive) {
+            if (!hasAnyActive) {
                 resizerContainer.style.display = 'none';
             }
         });

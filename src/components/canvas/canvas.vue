@@ -34,7 +34,10 @@ const setSelectedElement = (e: MouseEvent) => {
     <div id="canvas" ref="canvas">
         <div class="paper">
             <template v-for="(item, index) in elements" :key="index">
-                <div class="element" :class="[item.type]" :data-id="index" :onmousedown="setSelectedElement" :onclick="setSelectedElement"></div>
+                <div class="element" :class="[item.type]" :data-id="index" :onmousedown="setSelectedElement" :onclick="setSelectedElement">
+                    <textarea v-if="item.type == 'text'" :value="item.text">
+                    </textarea>
+                </div>
             </template>
         </div>
     </div>
