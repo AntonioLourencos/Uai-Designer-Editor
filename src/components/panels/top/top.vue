@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { onMounted, onUpdated, ref } from 'vue';
+import domtoimage from 'dom-to-image';
+import { onMounted, ref } from 'vue';
 import { ElementType } from '../../../store/elements';
 import useElementsStore from '../../../store/elements';
 const ctxMenu = ref<number | undefined>(undefined);
@@ -48,8 +49,17 @@ class CtxMenuOptions {
         }
     }
 
-    static exportSvg() {
-        alert('opa');
+    static exportPng() {
+        const paper = document.querySelector('.paper') as Element;
+        domtoimage.toPng(paper)
+            .then(response => {
+                const link = document.createElement('a');
+                link.download = `UAIDesign_${Date.now()}.png`;
+                link.href = response;
+                link.click()
+                console.log(response)
+            })
+            .catch(err => console.log(err));
     }
 }
 </script>
@@ -80,7 +90,7 @@ class CtxMenuOptions {
             </div>
 
             <div class="ctx-menu" :style="{ display: ctxMenu == 2 ? 'block' : 'none' }">
-                <li :onclick="() => CtxMenuOptions.exportSvg()">Exportar SVG</li>
+                <li :onclick="() => CtxMenuOptions.exportPng()">Exportar PNG</li>
             </div>
         </div>
     </div>
