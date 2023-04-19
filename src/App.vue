@@ -9,12 +9,15 @@ import BottomComponent from './components/panels/bottom/bottom.vue';
 
 <template>
     <div id="app">
-        <TopComponent />
-        <div class="side">
+        <div class="flexible">
           <LeftComponent />
-          <CanvasComponent />
+          <div class="middle">
+            <TopComponent />
+            <CanvasComponent />
+          </div>
           <RightComponent />
         </div>
+
         <BottomComponent />
     </div>
 </template>

@@ -4,6 +4,8 @@
 
 <template>
     <div class="left panel">
-        left
+        <a href="/">
+            <div class="logo">Uai Design Editor</div>
+        </a>
     </div>
 </template>
