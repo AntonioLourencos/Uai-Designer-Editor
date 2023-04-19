@@ -81,6 +81,14 @@ body {
                 background-color: transparent;
             }
 
+            &.no-ctx {
+                width: auto;
+                padding: 1rem;
+                &::after {
+                    display: none;
+                }
+            }
+
             &:hover {
                 &:after {
                     color: #80b9e1;

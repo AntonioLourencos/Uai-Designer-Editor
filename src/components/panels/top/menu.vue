@@ -3,6 +3,8 @@ import domtoimage from 'dom-to-image';
 import { ElementType } from '../../../store/elements';
 import useElementsStore from '../../../store/elements';
 import { onMounted, ref } from 'vue';
+import Archive from '../../../utils/Archive';
+import { blob } from 'stream/consumers';
 
 const ctxMenu = ref<number | undefined>(undefined);
 
@@ -99,6 +101,12 @@ class CtxMenuOptions {
             console.log(response);
         };
     }
+
+    static saveProject() {
+        const data = useElementsStore().elements;
+        const blobData = Archive.createBlob(JSON.stringify(data), 'application/json');
+        Archive.download(`UAIDesign_${Date.now()}`, 'json', blobData);
+    }
 }
 </script>
 
@@ -124,10 +132,15 @@ class CtxMenuOptions {
     
         </div>
         <div class="right">
+            <div class="button icon no-ctx" :onclick="CtxMenuOptions.saveProject" title="Salvar projeto">
+                <i class="fas fa-save"></i>
+            </div>
+
             <div class="button icon" title="Exportar">
                 <i class="fas fa-download"></i>
             </div>
-            <div class="ctx-menu" :style="{ display: ctxMenu == 2 ? 'block' : 'none' }">
+
+            <div class="ctx-menu" :style="{ display: ctxMenu == 3 ? 'block' : 'none' }">
                 <li :onclick="() => CtxMenuOptions.export('png')">Exportar PNG</li>
                 <li :onclick="() => CtxMenuOptions.export('svg')">Exportar SVG</li>
                 <li :onclick="() => CtxMenuOptions.export('jpeg')">Exportar JPEG</li>
