@@ -12,9 +12,9 @@ onMounted(() => {
 function defineCtxMenuPosition() {
     const topHeight = document.querySelector('.top.panel')?.clientHeight;
     const ctxMenus = document.querySelectorAll('.ctx-menu');
-    ctxMenus.forEach(ctxMenu => {
+    ctxMenus.forEach((ctxMenu) => {
         (ctxMenu as HTMLDivElement).style.setProperty('top', `${topHeight ?? 40}px`);
-    })
+    });
 }
 
 function defineCtxMenuOnClick() {
@@ -23,23 +23,33 @@ function defineCtxMenuOnClick() {
 
     buttons.forEach((button, index) => {
         button.addEventListener('click', () => {
-            ctxMenu.value = ctxMenu.value == undefined ? index : index;
-        });   
+            // if clicked on the same menu, then close
+            if (ctxMenu.value != undefined && index == ctxMenu.value) {
+                ctxMenu.value = undefined;
+            } else {
+                ctxMenu.value = index;
+            }
+        });
     });
 
-    ctxMenus.forEach(ctxMenuEl => {
+    ctxMenus.forEach((ctxMenuEl) => {
         (ctxMenuEl as HTMLDivElement).addEventListener('click', () => {
             ctxMenu.value = undefined;
-        })
-    })
-    
+        });
+    });
 }
 
-function insertShape(type: ElementType) {
-    switch(type) {
-        case 'rectangle':
-            useElementsStore().insertElement({type: 'rectangle'});
-        break;
+class CtxMenuOptions {
+    static insertShape(type: ElementType) {
+        switch (type) {
+            case 'rectangle':
+                useElementsStore().insertElement({ type: 'rectangle' });
+                break;
+        }
+    }
+
+    static exportSvg() {
+        alert('opa');
     }
 }
 </script>
@@ -56,14 +66,21 @@ function insertShape(type: ElementType) {
             <div class="button icon" title="Inserir texto">
                 <img src="assets/icons/Text.svg" draggable="false" />
             </div>
+            <div class="button icon" title="Exportar">
+                <i class="fas fa-download"></i>
+            </div>
 
-            <div class="ctx-menu" :style="{display: ctxMenu == 0 ? 'block' : 'none'}">
-                <li :onclick="() => insertShape('rectangle')">Retângulo</li>
+            <div class="ctx-menu" :style="{ display: ctxMenu == 0 ? 'block' : 'none' }">
+                <li :onclick="() => CtxMenuOptions.insertShape('rectangle')">Retângulo</li>
                 <li>Linha</li>
             </div>
 
-            <div class="ctx-menu" :style="{display: ctxMenu == 1 ? 'block' : 'none'}">
+            <div class="ctx-menu" :style="{ display: ctxMenu == 1 ? 'block' : 'none' }">
                 <li>Inserir texto</li>
+            </div>
+
+            <div class="ctx-menu" :style="{ display: ctxMenu == 2 ? 'block' : 'none' }">
+                <li :onclick="() => CtxMenuOptions.exportSvg()">Exportar SVG</li>
             </div>
         </div>
     </div>
