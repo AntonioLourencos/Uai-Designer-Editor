@@ -24,7 +24,6 @@ function defineFocus() {
         focusStore.setFocus(top);
     });
     top.addEventListener('blur', () => {
-        console.log('blur')
         ctxMenu.value = undefined;
     })
 }

@@ -13,6 +13,7 @@ const focusStore = useFocusStore();
 focusStore.$subscribe((_, value) => {
   console.log(`New Focus detected:`, value.lastFocusElement);
   // set active element 
+  if(value.lastFocusElement?.classList.contains('canvas'))
   useElementsStore().setSelectedElement(undefined);
 });
 
