@@ -13,6 +13,10 @@ const useElementsStore = defineStore('elements', () => {
     const elements = ref<ElementD[]>([]);
     const selectedElementIdx = ref<string | undefined>(undefined);
 
+    function resetElements() {
+        elements.value = [];
+    }
+
     function getElement(index: number) {
         const idx = elements.value.findIndex((el, i) => i == index);
         if(idx >= 0) {
@@ -44,7 +48,7 @@ const useElementsStore = defineStore('elements', () => {
         })
     }
 
-    return {elements, selectedElementIdx, insertElement, removeElement, setSelectedElement, setElementStyle}
+    return {elements, selectedElementIdx, insertElement, removeElement, setSelectedElement, setElementStyle, resetElements}
 });
 
 export type {ElementD, ElementType};

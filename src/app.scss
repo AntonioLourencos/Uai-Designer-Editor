@@ -145,6 +145,11 @@ body {
             width: -webkit-fill-available;
             justify-content: space-between;
 
+            .middle {
+                font-size: 15px;
+                user-select: none;
+            }
+
             .left,
             .right {
                 display: flex;

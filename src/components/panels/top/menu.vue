@@ -129,6 +129,8 @@ class CtxMenuOptions {
                     const fileContent = reader.result;
                     const jsonData = JSON.parse(fileContent as any) as {elements: ElementD[]}; // Parse the JSON data
                     const store = useElementsStore();
+                    // reset elements then import
+                    store.resetElements();
                     jsonData.elements.forEach(element => {
                         store.insertElement(element);
                     })
@@ -159,6 +161,9 @@ class CtxMenuOptions {
             <div class="ctx-menu" :style="{ display: ctxMenu == 1 ? 'block' : 'none' }">
                 <li :onclick="() => CtxMenuOptions.insertShape('text')">Inserir texto</li>
             </div>
+        </div>
+        <div class="middle">
+            opa
         </div>
         <div class="right">
             <div class="button icon no-ctx" :onclick="CtxMenuOptions.saveProject" title="Salvar projeto">
