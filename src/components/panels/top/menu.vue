@@ -18,18 +18,15 @@ onMounted(() => {
     defineCtxMenuOnClick();
 });
 
-focusStore.$subscribe((_, value) => {
-    // when focus changed, close top menu ctx
-    if(!value.lastFocusElement?.classList.contains('top')) {
-        ctxMenu.value = undefined;
-    }
-});
-
 function defineFocus() {
     const top = document.querySelector('.top') as HTMLDivElement;
     top.addEventListener('click', () => {
         focusStore.setFocus(top);
     });
+    top.addEventListener('blur', () => {
+        console.log('blur')
+        ctxMenu.value = undefined;
+    })
 }
 
 function defineCtxMenuPosition() {
