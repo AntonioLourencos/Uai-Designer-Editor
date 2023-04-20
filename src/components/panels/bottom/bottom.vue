@@ -1,9 +1,15 @@
 <script lang="ts" setup>
+import useFocusStore from '../../../store/focus';
 import './bottom.scss';
 import { ref } from 'vue';
 
-
+const focusStore = useFocusStore();
 const isOpen = ref<boolean>(false);
+
+const setFocus = (e: MouseEvent) => {
+    const target = e.target as HTMLElement;
+    focusStore.setFocus(target);
+}
 
 const setIsOpen = () => {
     isOpen.value = !isOpen.value;
@@ -12,7 +18,7 @@ const setIsOpen = () => {
 </script>
 
 <template>
-    <div class="bottom panel">
+    <div class="bottom panel" :onclick="setFocus">
         <div class="title" :onclick="setIsOpen">
             <template :style="{display: isOpen ? 'inline-block': 'none'}">
                 <i class="fas fa-caret-down"></i>

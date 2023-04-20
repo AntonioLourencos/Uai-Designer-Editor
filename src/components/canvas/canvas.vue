@@ -1,12 +1,14 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
 import useElementsStore from '../../store/elements';
-import { onMounted, onUpdated, ref, watch } from 'vue';
+import { onMounted, ref } from 'vue';
 import TriggerEvents from './triggers';
 import DefineElement from '../../class/element';
+import useFocusStore from '../../store/focus';
 
 const canvas = ref<Element | undefined>(undefined);
 
+const focusStore = useFocusStore();
 const elementsStore = useElementsStore();
 const { elements } = storeToRefs(elementsStore);
 
@@ -29,10 +31,16 @@ const setSelectedElement = (e: MouseEvent) => {
     let id = (target.localName == 'textarea') ? (target.offsetParent as HTMLDivElement).dataset.id : target?.dataset?.id;
     useElementsStore().setSelectedElement(id);
 };
+
+const setFocus = (e: MouseEvent) => {
+    const target = e.target as HTMLElement;
+    focusStore.setFocus(target);
+}
+
 </script>
 
 <template>
-    <div id="canvas" ref="canvas">
+    <div id="canvas" ref="canvas" :onclick="setFocus">
         <div class="paper">
             <template v-for="(item, index) in elements" :key="index">
                 <div class="element" :class="[item.type]" :data-id="index" :onmousedown="setSelectedElement" :onclick="setSelectedElement" :style="{...item.style, zIndex: (index + 1)}">

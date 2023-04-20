@@ -6,14 +6,31 @@ import { onMounted, ref } from 'vue';
 import Archive from '../../../utils/Archive';
 import convertCSSProperties from '../../../utils/convertCSSProperties';
 import useStatusStore from '../../../store/status';
+import useFocusStore from '../../../store/focus';
 
 const ctxMenu = ref<number | undefined>(undefined);
+const focusStore = useFocusStore();
 const statusStore = useStatusStore();
 
 onMounted(() => {
+    defineFocus();
     defineCtxMenuPosition();
     defineCtxMenuOnClick();
 });
+
+focusStore.$subscribe((_, value) => {
+    // when focus changed, close top menu ctx
+    if(!value.lastFocusElement?.classList.contains('top')) {
+        ctxMenu.value = undefined;
+    }
+});
+
+function defineFocus() {
+    const top = document.querySelector('.top') as HTMLDivElement;
+    top.addEventListener('click', () => {
+        focusStore.setFocus(top);
+    });
+}
 
 function defineCtxMenuPosition() {
     const topHeight = document.querySelector('.top.panel')?.clientHeight;
