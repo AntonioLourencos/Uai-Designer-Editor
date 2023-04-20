@@ -148,6 +148,12 @@ body {
             .middle {
                 font-size: 15px;
                 user-select: none;
+                align-self: center;
+                text-align: center;
+                
+                &:empty {
+                    display: none;
+                }
             }
 
             .left,

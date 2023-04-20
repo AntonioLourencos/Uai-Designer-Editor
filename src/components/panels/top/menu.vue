@@ -5,8 +5,10 @@ import useElementsStore from '../../../store/elements';
 import { onMounted, ref } from 'vue';
 import Archive from '../../../utils/Archive';
 import convertCSSProperties from '../../../utils/convertCSSProperties';
+import useStatusStore from '../../../store/status';
 
 const ctxMenu = ref<number | undefined>(undefined);
+const statusStore = useStatusStore();
 
 onMounted(() => {
     defineCtxMenuPosition();
@@ -66,12 +68,15 @@ class CtxMenuOptions {
             element.classList.remove('active');
         });
 
+        useStatusStore().setMessage(`Exportando ${type}...`);
+
         switch (type) {
             case 'jpeg':
                 domtoimage
                     .toJpeg(paper)
                     .then((response) => {
                         createLink(response, 'jpg');
+                        useStatusStore().setMessage(null);
                     })
                     .catch((err) => console.log(err));
                 break;
@@ -80,6 +85,7 @@ class CtxMenuOptions {
                     .toSvg(paper)
                     .then((response) => {
                         createLink(response, 'svg');
+                        useStatusStore().setMessage(null);
                     })
                     .catch((err) => console.log(err));
                 break;
@@ -89,6 +95,7 @@ class CtxMenuOptions {
                     .toPng(paper)
                     .then((response) => {
                         createLink(response, 'png');
+                        useStatusStore().setMessage(null);
                     })
                     .catch((err) => console.log(err));
         }
@@ -163,7 +170,7 @@ class CtxMenuOptions {
             </div>
         </div>
         <div class="middle">
-            opa
+            {{ statusStore.message }}
         </div>
         <div class="right">
             <div class="button icon no-ctx" :onclick="CtxMenuOptions.saveProject" title="Salvar projeto">
