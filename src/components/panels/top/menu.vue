@@ -11,7 +11,7 @@ import useFocusStore from '../../../store/focus';
 const ctxMenu = ref<number | undefined>(undefined);
 const focusStore = useFocusStore();
 const statusStore = useStatusStore();
-const isDrawing =  computed(() => statusStore.isDrawing);
+const paintMode =  computed(() => statusStore.paint.paintMode);
 
 onMounted(() => {
     defineFocus();
@@ -165,11 +165,6 @@ class CtxMenuOptions {
             }
         });
     }
-
-    static setPaint() {
-        statusStore.toggleIsDrawing();
-    }
-    
 }
 </script>
 
@@ -179,7 +174,7 @@ class CtxMenuOptions {
             <div class="button icon" title="Inserir forma">
                 <i class="fa-solid fa-shapes"></i>
             </div>
-            <div class="button icon no-ctx" :class="isDrawing ? 'active': ''" title="Pintar" @click="CtxMenuOptions.setPaint">
+            <div class="button icon no-ctx" :class="paintMode ? 'active': ''" title="Pintar" @click="statusStore.togglePaintMode">
                 <i class="fas fa-paint-brush"></i>
             </div>
             <div class="button icon" title="Inserir texto">

@@ -1,5 +1,7 @@
 import useElementsStore from '../../store/elements';
 import interact from 'interactjs';
+import useStatusStore from '../../store/status';
+import { computed } from 'vue';
 
 class Trigger {
     paper: HTMLDivElement;
@@ -15,6 +17,56 @@ class Trigger {
         this.activeElement();
         // theres a bug with this
         this.positionPaper();
+        this.canvasElement();
+    }
+
+    canvasElement() {
+        const canvas = document.querySelector('canvas') as HTMLCanvasElement;
+        const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
+        // prevent content menu
+        canvas.addEventListener('contextmenu', (e) => {
+            e.preventDefault();
+        });
+        // drawings methods
+        // Configurando as propriedades de estilo da linha para criar um pincel
+        ctx.lineWidth = 10;
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+        // Definindo a cor de preenchimento como vermelha
+        ctx.fillStyle = 'red';
+
+        // Definindo a cor de contorno como azul
+        ctx.strokeStyle = 'blue';
+
+        // Definindo uma variável para rastrear o estado do mouse
+        const statusStore = useStatusStore();
+        statusStore.$subscribe((_, value) => {
+            // Adicionando um ouvinte de evento ao canvas para iniciar o desenho
+            console.log(value.paint.paintMode);
+            if (value.paint.paintMode) {
+                canvas.addEventListener('mousedown', (e) => {
+                    statusStore.setIsDrawing(true);
+                    ctx.beginPath();
+                    ctx.moveTo(e.clientX, e.clientY);
+                });
+
+                // Adicionando um ouvinte de evento ao canvas para continuar o desenho
+                canvas.addEventListener('mousemove', (e) => {
+                    if (value.paint.isDrawing) {
+                        ctx.lineTo(e.clientX, e.clientY);
+                        ctx.stroke();
+                        ctx.fill();
+                    }
+                });
+
+                // Adicionando um ouvinte de evento ao canvas para finalizar o desenho
+                canvas.addEventListener('mouseup', () => {
+                    statusStore.setIsDrawing(false);
+                    const imageUrl = canvas.toDataURL();
+                    console.log(imageUrl);
+                });
+            }
+        });
     }
 
     activeElement() {
@@ -100,7 +152,6 @@ class Trigger {
                     },
                 });
                 useElementsStore().setSelectedElement(undefined);
-
             }
         });
         document.addEventListener('keyup', function (event) {

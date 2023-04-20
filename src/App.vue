@@ -7,14 +7,24 @@ import RightComponent from './components/panels/right/right.vue';
 import BottomComponent from './components/panels/bottom/bottom.vue';
 import useFocusStore from './store/focus';
 import useElementsStore from './store/elements';
+import useStatusStore from './store/status';
 
 const focusStore = useFocusStore();
+const statusStore = useStatusStore();
 
 focusStore.$subscribe((_, value) => {
   console.log(`New Focus detected:`, value.lastFocusElement);
   // set active element 
   if(value.lastFocusElement?.classList.contains('canvas'))
   useElementsStore().setSelectedElement(undefined);
+});
+
+statusStore.$subscribe((_, value) => {
+  if(value.paint.paintMode) {
+    statusStore.setMessage('Modo pintura');
+  } else {
+      statusStore.setMessage(null);
+  }
 });
 
 </script>

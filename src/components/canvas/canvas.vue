@@ -1,14 +1,18 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
 import useElementsStore from '../../store/elements';
-import { onMounted, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import TriggerEvents from './triggers';
 import DefineElement from '../../class/element';
 import useFocusStore from '../../store/focus';
+import useStatusStore from '../../store/status';
 
 const canvas = ref<Element | undefined>(undefined);
 
 const focusStore = useFocusStore();
+const statusStore = useStatusStore();
+const isDrawing = computed(() => statusStore.isDrawing);
+
 const elementsStore = useElementsStore();
 const { elements } = storeToRefs(elementsStore);
 
@@ -28,24 +32,31 @@ onMounted(() => {
 const setSelectedElement = (e: MouseEvent) => {
     e.stopPropagation();
     const target = e.target as HTMLDivElement;
-    let id = (target.localName == 'textarea') ? (target.offsetParent as HTMLDivElement).dataset.id : target?.dataset?.id;
+    let id = target.localName == 'textarea' ? (target.offsetParent as HTMLDivElement).dataset.id : target?.dataset?.id;
     useElementsStore().setSelectedElement(id);
 };
 
 const setFocus = (e: MouseEvent) => {
     const target = e.target as HTMLElement;
     focusStore.setFocus(target);
-}
-
+};
 </script>
 
 <template>
     <div id="canvas" ref="canvas" :onclick="setFocus">
         <div class="paper">
+            <!-- :style="{ display: isDrawing ? 'block' : 'none' }" -->
+            <canvas > </canvas>
             <template v-for="(item, index) in elements" :key="index">
-                <div class="element" :class="[item.type]" :data-id="index" :onmousedown="setSelectedElement" :onclick="setSelectedElement" :style="{...item.style, zIndex: (index + 1)}">
-                    <textarea v-if="item.type == 'text'" :value="item.text">
-                    </textarea>
+                <div
+                    class="element"
+                    :class="[item.type]"
+                    :data-id="index"
+                    :onmousedown="setSelectedElement"
+                    :onclick="setSelectedElement"
+                    :style="{ ...item.style, zIndex: index + 1 }"
+                >
+                    <textarea v-if="item.type == 'text'" :value="item.text"> </textarea>
                 </div>
             </template>
         </div>
