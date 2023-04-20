@@ -115,7 +115,7 @@ class CtxMenuOptions {
         Archive.download(`UAIDesign_${Date.now()}`, 'uai', blobData);
     }
 
-    static openProject() {
+    static import() {
         const input = document.createElement('input');
         input.type = 'file';
         input.click();
@@ -165,7 +165,7 @@ class CtxMenuOptions {
                 <i class="fas fa-save"></i>
             </div>
 
-            <div class="button icon no-ctx" title="Importar projeto" :onclick="CtxMenuOptions.openProject">
+            <div class="button icon no-ctx" title="Importar projeto" :onclick="CtxMenuOptions.import">
                 <i class="fas fa-upload"></i>
             </div>
 

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
 import useElementsStore from '../../store/elements';
-import { onMounted, onUpdated, ref } from 'vue';
+import { onMounted, onUpdated, ref, watch } from 'vue';
 import TriggerEvents from './triggers';
 import DefineElement from '../../class/element';
 
@@ -10,11 +10,11 @@ const canvas = ref<Element | undefined>(undefined);
 const elementsStore = useElementsStore();
 const { elements } = storeToRefs(elementsStore);
 
-onUpdated(() => {
-    const index = elements.value.length - 1;
-    const lastElement = elements.value[index];
-    const selector = `.paper .element.${lastElement.type}[data-id="${index}"]`;
-    new DefineElement(selector);
+elementsStore.$subscribe((mutation, value) => {
+    value.elements.forEach((element, index) => {
+        const elementEl = document.querySelector(`.paper .element.${element.type}[data-id="${index}"]`) as Element;
+        new DefineElement(elementEl);
+    });
 });
 
 onMounted(() => {

@@ -1,24 +1,16 @@
 //@ts-ignore
 import resizer from 'move-rotate-resizer';
-import useElementsStore from '../store/elements';
-import convertCSSProperties from '../utils/convertCSSProperties';
 
 class DefineElement {
-    target: string;
+    target: Element;
 
-    constructor(target: string) {
+    constructor(target: Element) {
         this.target = target;
         this.draggable();
     }
 
-    saveElementChanges(id: number, style: CSSStyleDeclaration) {
-        const cssProperties = convertCSSProperties(style);
-        useElementsStore().setElementStyle(id, cssProperties);
-    }
-
     draggable() {
-        const targetEl = document.querySelector(this.target) as HTMLDivElement;
-        resizer.add(targetEl, {
+        resizer.add(this.target, {
             minWidth: 5,
             minHeight: 5,
         });
