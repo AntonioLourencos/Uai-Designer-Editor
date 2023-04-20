@@ -143,7 +143,11 @@ class CtxMenuOptions {
                     })
                 };
             } else {
-                window.alert('Por favor selecione um arquivo com a extensão "uai".');
+                useStatusStore().setMessage('Por favor selecione um arquivo com a extensão "uai".');
+                setTimeout(() => {
+                    useStatusStore().setMessage(null);
+                }, 2000);
+                // window.alert('Por favor selecione um arquivo com a extensão "uai".');
             }
         });
     }

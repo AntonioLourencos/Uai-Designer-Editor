@@ -1,5 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
 
+$elegant-blue:#80b9e1 ;
+
 * {
     font-family: 'Inter', sans-serif;
 }
@@ -14,7 +16,7 @@ body {
     z-index: 2 !important;
 
     .resizer-border {
-        outline: solid 3px #80b9e1 !important;
+        outline: solid 3px $elegant-blue !important;
         outline-offset: -3px !important;
         border: none !important;
     }
@@ -91,7 +93,7 @@ body {
 
             &:hover {
                 &:after {
-                    color: #80b9e1;
+                    color: $elegant-blue;
                 }
 
                 & svg,
@@ -181,7 +183,7 @@ body {
 
                 &:hover {
                     background-color: #222;
-                    color: #80b9e1;
+                    color: $elegant-blue;
                 }
             }
         }
@@ -230,7 +232,7 @@ body {
             &:hover {
                 position: relative;
                 outline-offset: -2px !important;
-                outline: solid 3px #80b9e1 !important;
+                outline: solid 3px $elegant-blue !important;
             }
 
             &.rectangle, &.circle {

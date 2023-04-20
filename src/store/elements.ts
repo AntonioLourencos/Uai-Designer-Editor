@@ -5,6 +5,7 @@ interface ElementD {
     type: ElementType
     style?: CSSProperties;
     text?: string;
+    name?: string;
 }
 
 type ElementType = 'rectangle' | 'line' | 'text' | 'circle';
@@ -12,10 +13,6 @@ type ElementType = 'rectangle' | 'line' | 'text' | 'circle';
 const useElementsStore = defineStore('elements', () => {
     const elements = ref<ElementD[]>([]);
     const selectedElementIdx = ref<string | undefined>(undefined);
-
-    function resetElements() {
-        elements.value = [];
-    }
 
     function getElement(index: number) {
         const idx = elements.value.findIndex((el, i) => i == index);
@@ -26,6 +23,16 @@ const useElementsStore = defineStore('elements', () => {
                 },
             }
         }
+    }
+
+    function setElementName(index: number, name: string) {
+        getElement(index)?.then(() => {
+            elements.value[index].name = name;
+        });
+    }
+    
+    function resetElements() {
+        elements.value = [];
     }
 
     function setSelectedElement(index: string | undefined) {
@@ -48,7 +55,7 @@ const useElementsStore = defineStore('elements', () => {
         })
     }
 
-    return {elements, selectedElementIdx, insertElement, removeElement, setSelectedElement, setElementStyle, resetElements}
+    return {elements, selectedElementIdx, insertElement, removeElement, setSelectedElement, setElementStyle, resetElements, setElementName}
 });
 
 export type {ElementD, ElementType};
