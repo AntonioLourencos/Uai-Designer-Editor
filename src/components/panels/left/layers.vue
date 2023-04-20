@@ -5,7 +5,7 @@ import Sortable from 'sortablejs';
 import useElementsStore from '../../../store/elements';
 
 const elementsStore = useElementsStore();
-const elements = computed(() => elementsStore.elements);
+const elements = computed(() => [...elementsStore.elements]);
 const listRef = ref(null);
 
 onMounted(() => {

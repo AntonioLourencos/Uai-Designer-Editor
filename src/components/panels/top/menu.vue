@@ -2,7 +2,7 @@
 import domtoimage from 'dom-to-image';
 import { ElementD, ElementType } from '../../../store/elements';
 import useElementsStore from '../../../store/elements';
-import { onMounted, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import Archive from '../../../utils/Archive';
 import convertCSSProperties from '../../../utils/convertCSSProperties';
 import useStatusStore from '../../../store/status';
@@ -11,6 +11,7 @@ import useFocusStore from '../../../store/focus';
 const ctxMenu = ref<number | undefined>(undefined);
 const focusStore = useFocusStore();
 const statusStore = useStatusStore();
+const isDrawing =  computed(() => statusStore.isDrawing);
 
 onMounted(() => {
     defineFocus();
@@ -164,6 +165,11 @@ class CtxMenuOptions {
             }
         });
     }
+
+    static setPaint() {
+        statusStore.toggleIsDrawing();
+    }
+    
 }
 </script>
 
@@ -173,16 +179,19 @@ class CtxMenuOptions {
             <div class="button icon" title="Inserir forma">
                 <i class="fa-solid fa-shapes"></i>
             </div>
+            <div class="button icon no-ctx" :class="isDrawing ? 'active': ''" title="Pintar" @click="CtxMenuOptions.setPaint">
+                <i class="fas fa-paint-brush"></i>
+            </div>
             <div class="button icon" title="Inserir texto">
                 <img src="assets/icons/Text.svg" draggable="false" />
-            </div>
+            </div> 
 
             <div class="ctx-menu" :style="{ display: ctxMenu == 0 ? 'block' : 'none' }">
                 <li :onclick="() => CtxMenuOptions.insertShape('rectangle')">Retângulo</li>
                 <li :onclick="() => CtxMenuOptions.insertShape('circle')">Círculo</li>
             </div>
 
-            <div class="ctx-menu" :style="{ display: ctxMenu == 1 ? 'block' : 'none' }">
+            <div class="ctx-menu" :style="{ display: ctxMenu == 2 ? 'block' : 'none' }">
                 <li :onclick="() => CtxMenuOptions.insertShape('text')">Inserir texto</li>
             </div>
         </div>

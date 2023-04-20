@@ -16,6 +16,7 @@
         input {
             all: unset;
             pointer-events: none;
+            width: 160px;
 
             &:not(:disabled) {
                 pointer-events: all;
