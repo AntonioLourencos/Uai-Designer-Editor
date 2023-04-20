@@ -1,4 +1,5 @@
 import useElementsStore from '../../store/elements';
+import interact from 'interactjs';
 
 class Trigger {
     paper: HTMLDivElement;
@@ -7,11 +8,13 @@ class Trigger {
     constructor(canvas: HTMLDivElement) {
         this.canvas = canvas;
         this.paper = canvas.querySelector('.paper') as HTMLDivElement;
+
+        this.paper.style.transform = 'scale(1) translate(0px, 0px)';
         this.disableDefaultBrowserZoom();
         this.scale();
         this.activeElement();
         // theres a bug with this
-        // this.positionPaper();
+        this.positionPaper();
     }
 
     activeElement() {
@@ -64,61 +67,44 @@ class Trigger {
     }
 
     positionPaper() {
-        // Get the HTML elements to add the mouse event listeners to
-        const draggableElement = this.paper;
-        const containerElement = this.canvas;
+        const draggable = this.canvas;
+        document.addEventListener('keydown', (e: KeyboardEvent) => {
+            if (e.code == 'Space') {
+                interact(draggable).draggable({
+                    modifiers: [
+                        interact.modifiers.restrictRect({
+                            // restriction: 'parent',
+                            endOnly: true,
+                        }),
+                    ],
+                    // enable autoScroll
+                    autoScroll: true,
 
-        // Define the initial position of the draggable element
-        let offsetX = 0;
-        let offsetY = 0;
+                    listeners: {
+                        // call this function on every dragmove event
+                        move: (event) => {
+                            event.stopPropagation();
+                            var target = event.target;
+                            // keep the dragged position in the data-x/data-y attributes
+                            var x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
+                            var y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
 
-        // Add mouse event listeners to the draggable element
-        draggableElement.addEventListener('mousedown', (event) => {
-            // Record the starting mouse position
-            offsetX = event.clientX - draggableElement.offsetLeft;
-            offsetY = event.clientY - draggableElement.offsetTop;
+                            // translate the element
+                            this.paper.style.transform = this.paper.style.transform.replace(/translate\((.*?)\)/, `translate(${x}px, ${y}px)`);
 
-            // Set the draggable element to be positioned absolutely
-            draggableElement.style.position = 'absolute';
-
-            // Disable CSS transitions while dragging
-            draggableElement.style.transition = 'none';
-        });
-
-        draggableElement.addEventListener('mousemove', (event) => {
-            // Check if the mouse button is pressed
-            if (event.buttons === 1) {
-                // Calculate the new position of the draggable element
-                const newX = event.clientX - offsetX;
-                const newY = event.clientY - offsetY;
-
-                // Set the position of the draggable element using transitions
-                draggableElement.style.left = `${newX}px`;
-                draggableElement.style.top = `${newY}px`;
+                            // update the posiion attributes
+                            target.setAttribute('data-x', x);
+                            target.setAttribute('data-y', y);
+                            return;
+                        },
+                    },
+                });
             }
         });
-
-        draggableElement.addEventListener('mouseup', (event) => {
-            // Get the position of the draggable element relative to the container
-            const containerRect = containerElement.getBoundingClientRect();
-            const draggableRect = draggableElement.getBoundingClientRect();
-            const relativeX = draggableRect.left - containerRect.left;
-            const relativeY = draggableRect.top - containerRect.top;
-
-            // Set the position of the draggable element relative to the container using transitions
-            draggableElement.style.transition = 'left 0.1s linear, top 0.1s linear';
-            draggableElement.style.position = 'relative';
-            draggableElement.style.left = `${relativeX}px`;
-            draggableElement.style.top = `${relativeY}px`;
-
-            // Remove the transitions once they have finished
-            draggableElement.addEventListener(
-                'transitionend',
-                () => {
-                    draggableElement.style.transition = 'none';
-                },
-                { once: true },
-            );
+        document.addEventListener('keyup', function (event) {
+            if (event.code === 'Space') {
+                interact(draggable).unset();
+            }
         });
     }
 
@@ -126,7 +112,7 @@ class Trigger {
         // define min max scale
         const defineScales = {
             min: 0.5,
-            max: 1.04004,
+            max: 2,
         };
         let scaleKey = 1;
         // Add keydown and keyup event listeners to the window object
@@ -150,9 +136,7 @@ class Trigger {
             }
         });
         this.canvas.addEventListener('mousewheel', (event) => {
-            console.log(event);
             if ((event as WheelEvent).ctrlKey) {
-                console.log('Scale event', event);
                 // Get the current zoom scale
                 let currentScale = parseFloat(this.paper.style.transform.replace('scale(', '').replace(')', ''));
                 if (isNaN(currentScale)) {
@@ -164,8 +148,7 @@ class Trigger {
                 newScale = Math.max(defineScales.min, Math.min(defineScales.max, newScale));
 
                 // Apply the new zoom scale to the element
-                console.log(currentScale);
-                this.paper.style.transform = `scale(${newScale})`;
+                this.paper.style.transform = this.paper.style.transform.replace(/scale\([0-9|\.]*\)/, `scale(${newScale})`);
             }
         });
     }

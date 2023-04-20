@@ -130,6 +130,7 @@ body {
 
         .middle {
             flex-grow: 1;
+            height: calc(100% - 36px);
             display: flex;
             flex-direction: column;
         }
@@ -213,8 +214,8 @@ body {
     .paper {
         background-color: #fff;
         overflow: hidden;
-        width: 90%;
-        height: 90%;
+        width: 56%;
+        height: 90vh;
 
         .element {
             display: inline-block;
