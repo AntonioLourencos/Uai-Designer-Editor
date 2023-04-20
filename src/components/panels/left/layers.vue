@@ -3,7 +3,6 @@ import { computed, onMounted, ref } from 'vue';
 import './layers.scss';
 import Sortable from 'sortablejs';
 import useElementsStore from '../../../store/elements';
-import { title } from 'process';
 
 const elementsStore = useElementsStore();
 const elements = computed(() => elementsStore.elements);
