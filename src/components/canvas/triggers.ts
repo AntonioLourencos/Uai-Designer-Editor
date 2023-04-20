@@ -29,7 +29,6 @@ class Trigger {
             width: paperSize.width,
             height: paperSize.height,
         };
-        console.log(parseInt(paperSize.width));
         canvas.width = parseInt(paperSize.width);
         canvas.height = parseInt(paperSize.height);
 
@@ -61,7 +60,8 @@ class Trigger {
 
                 // Adicionando um ouvinte de evento ao canvas para continuar o desenho
                 canvas.addEventListener('mousemove', (e) => {
-                    if (value.paint.isDrawing) {
+                    if (value.paint.paintMode && value.paint.isDrawing) {
+                        console.log('opa')
                         const x = e.clientX - canvasRect.left - window.pageXOffset;
                         const y = e.clientY - canvasRect.top - window.pageYOffset;
                         ctx.lineTo(x, y);
@@ -71,9 +71,11 @@ class Trigger {
 
                 // Adicionando um ouvinte de evento ao canvas para finalizar o desenho
                 canvas.addEventListener('mouseup', () => {
-                    statusStore.setIsDrawing(false);
-                    const imageUrl = canvas.toDataURL();
-                    console.log(imageUrl);
+                    if (value.paint.paintMode && value.paint.isDrawing) {
+                        statusStore.setIsDrawing(false);
+                        const imageUrl = canvas.toDataURL();
+                        console.log(imageUrl);
+                    }
                 });
             }
         });
