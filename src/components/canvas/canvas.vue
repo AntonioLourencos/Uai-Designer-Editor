@@ -11,7 +11,7 @@ const canvas = ref<Element | undefined>(undefined);
 
 const focusStore = useFocusStore();
 const statusStore = useStatusStore();
-const isDrawing = computed(() => statusStore.isDrawing);
+const paintMode = computed(() => statusStore.paint.paintMode);
 
 const elementsStore = useElementsStore();
 const { elements } = storeToRefs(elementsStore);
@@ -45,8 +45,8 @@ const setFocus = (e: MouseEvent) => {
 <template>
     <div id="canvas" ref="canvas" :onclick="setFocus">
         <div class="paper">
-            <!-- :style="{ display: isDrawing ? 'block' : 'none' }" -->
-            <canvas > </canvas>
+            <!-- :style="{ display: paintMode ? 'block' : 'none' }" -->
+            <canvas :style="{cursor: paintMode ? 'crosshair' : 'auto'}"> </canvas>
             <template v-for="(item, index) in elements" :key="index">
                 <div
                     class="element"

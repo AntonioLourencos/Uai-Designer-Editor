@@ -23,20 +23,27 @@ class Trigger {
     canvasElement() {
         const canvas = document.querySelector('canvas') as HTMLCanvasElement;
         const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
+        // define canvas size
+        let paperSize: any = getComputedStyle(this.paper);
+        paperSize = {
+            width: paperSize.width,
+            height: paperSize.height,
+        };
+        console.log(parseInt(paperSize.width));
+        canvas.width = parseInt(paperSize.width);
+        canvas.height = parseInt(paperSize.height);
+
         // prevent content menu
         canvas.addEventListener('contextmenu', (e) => {
             e.preventDefault();
         });
         // drawings methods
-        // Configurando as propriedades de estilo da linha para criar um pincel
-        ctx.lineWidth = 10;
+        ctx.lineWidth = 5;
         ctx.lineCap = 'round';
         ctx.lineJoin = 'round';
-        // Definindo a cor de preenchimento como vermelha
-        ctx.fillStyle = 'red';
+        ctx.strokeStyle = 'black';
 
-        // Definindo a cor de contorno como azul
-        ctx.strokeStyle = 'blue';
+        const canvasRect = canvas.getBoundingClientRect();
 
         // Definindo uma variável para rastrear o estado do mouse
         const statusStore = useStatusStore();
@@ -47,15 +54,18 @@ class Trigger {
                 canvas.addEventListener('mousedown', (e) => {
                     statusStore.setIsDrawing(true);
                     ctx.beginPath();
-                    ctx.moveTo(e.clientX, e.clientY);
+                    const x = e.clientX - canvasRect.left - window.pageXOffset;
+                    const y = e.clientY - canvasRect.top - window.pageYOffset;
+                    ctx.moveTo(x, y);
                 });
 
                 // Adicionando um ouvinte de evento ao canvas para continuar o desenho
                 canvas.addEventListener('mousemove', (e) => {
                     if (value.paint.isDrawing) {
-                        ctx.lineTo(e.clientX, e.clientY);
+                        const x = e.clientX - canvasRect.left - window.pageXOffset;
+                        const y = e.clientY - canvasRect.top - window.pageYOffset;
+                        ctx.lineTo(x, y);
                         ctx.stroke();
-                        ctx.fill();
                     }
                 });
 

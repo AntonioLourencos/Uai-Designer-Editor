@@ -206,7 +206,7 @@ class CtxMenuOptions {
                 <i class="fas fa-download"></i>
             </div>
 
-            <div class="ctx-menu" :style="{ display: ctxMenu == 4 ? 'block' : 'none' }">
+            <div class="ctx-menu" :style="{ display: ctxMenu == 5 ? 'block' : 'none' }">
                 <li :onclick="() => CtxMenuOptions.export('png')">Exportar PNG</li>
                 <li :onclick="() => CtxMenuOptions.export('svg')">Exportar SVG</li>
                 <li :onclick="() => CtxMenuOptions.export('jpeg')">Exportar JPEG</li>
