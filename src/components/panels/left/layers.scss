@@ -30,18 +30,23 @@
         
         & .edit-icon {
             padding: 5px;
-            transition: .1s color;
-            color: #fff;
+            transition: .2s color;
+            color: #ffffff2a;
 
-            &:hover {
-                color: #80b9e1;
-            }
         }
         
         &:hover {
             background-color: #00000056;
             border: 1px solid #80b9e1;
             color: #80b9e1;
+            
+            & .edit-icon {
+                color:#ffffffb4;
+                
+                &:hover {
+                    color: #80b9e1;
+                }
+            }
         }
     }
 }
