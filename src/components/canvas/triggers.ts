@@ -99,6 +99,8 @@ class Trigger {
                         },
                     },
                 });
+                useElementsStore().setSelectedElement(undefined);
+
             }
         });
         document.addEventListener('keyup', function (event) {
@@ -133,6 +135,7 @@ class Trigger {
                 // Apply the new scale factor to the element
                 scaleKey = Math.max(defineScales.min, Math.min(defineScales.max, scaleKey));
                 this.paper.style.transform = `scale(${scaleKey})`;
+                useElementsStore().setSelectedElement(undefined);
             }
         });
         this.canvas.addEventListener('mousewheel', (event) => {
@@ -149,6 +152,7 @@ class Trigger {
 
                 // Apply the new zoom scale to the element
                 this.paper.style.transform = this.paper.style.transform.replace(/scale\([0-9|\.]*\)/, `scale(${newScale})`);
+                useElementsStore().setSelectedElement(undefined);
             }
         });
     }

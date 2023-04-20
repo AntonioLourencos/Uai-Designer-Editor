@@ -6,11 +6,14 @@ import LeftComponent from './components/panels/left/left.vue';
 import RightComponent from './components/panels/right/right.vue';
 import BottomComponent from './components/panels/bottom/bottom.vue';
 import useFocusStore from './store/focus';
+import useElementsStore from './store/elements';
 
 const focusStore = useFocusStore();
 
 focusStore.$subscribe((_, value) => {
-  console.log(`New Focus detected:`, value.lastFocusElement)
+  console.log(`New Focus detected:`, value.lastFocusElement);
+  // set active element 
+  useElementsStore().setSelectedElement(undefined);
 });
 
 </script>
