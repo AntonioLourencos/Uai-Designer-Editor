@@ -169,9 +169,11 @@ class Trigger extends Environment {
           }
   
           // do nothing if clicked NOT on our rectangles
-          if (!e.target.hasName(defaultShapes)) {
-            return;
-          }
+          defaultShapes.forEach(shape => {
+              if (!e.target.hasName(shape)) {
+                return;
+              }
+          });
   
           // do we pressed shift or ctrl?
           const metaPressed = e.evt.shiftKey || e.evt.ctrlKey || e.evt.metaKey;
