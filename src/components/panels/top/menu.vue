@@ -62,9 +62,9 @@ function defineCtxMenuOnClick() {
 class CtxMenuOptions {
     static insertShape(type: ElementType) {
         switch (type) {
-            case 'paint':
+            // case 'paint':
                 // to do
-            break;
+            // break;
             case 'text':
                 useElementsStore().insertElement({ type: 'text', text: 'Insira seu texto...' });
                 break;

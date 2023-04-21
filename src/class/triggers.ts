@@ -16,13 +16,12 @@ class Trigger extends Environment {
         this.layer = this.newLayer();
         this.shapeSelection();
         this.listenEvents();
-        this.listenShapeClick();
+        this.activateShapeProperties();
     }
 
-    listenShapeClick() {
-        const layerRef = this.layer;
+    activateShapeProperties() {
         const focusStore = useFocusStore();
-        this.layer.on('mouseup', (e) => {
+        this.stage.on('mouseup', (e) => {
             focusStore.setActionShape({name: 'Propriedades', shape: e.target});
         });
     }
@@ -40,10 +39,10 @@ class Trigger extends Environment {
     listenEvents() {
         useElementsStore().$subscribe((mutation, value) => {
             const events = mutation.events as any;
-            const newElement: ElementD = events.newValue;
-            if (newElement.action == 'create') {
+            const newElement: ElementD = events?.newValue;
+            if (newElement && newElement?.action == 'create') {
                 const index = value.elements.length - 1;
-                const shape = this.insertShape({ index, element: newElement });
+                this.insertShape({ index, element: newElement });
             }
         });
     }
@@ -118,6 +117,7 @@ class Trigger extends Environment {
         tr.nodes([]);
 
         let selectionRectangle = new Konva.Rect({
+            name: 'selectionRectangle',
             fill: '#D9EAF6',
             stroke: '#0D99FF',
             visible: false,
