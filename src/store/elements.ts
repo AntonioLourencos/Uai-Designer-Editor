@@ -1,3 +1,4 @@
+import { Stage } from "konva/lib/Stage";
 import { defineStore } from "pinia";
 import { CSSProperties, ref } from "vue";
 
@@ -12,8 +13,14 @@ interface ElementD {
 type ElementType = 'rectangle' | 'circle' | 'triangle' | 'text';
 
 const useElementsStore = defineStore('elements', () => {
+    const stage = ref<Stage | undefined>(undefined);
     const elements = ref<ElementD[]>([]);
     const selectedElementIdx = ref<string | undefined>(undefined);
+
+    function setStage(payload: Stage) {
+        stage.value = payload;
+        console.log('Stage injected');
+    }
 
     function getElement(index: number) {
         const idx = elements.value.findIndex((el, i) => i == index);
@@ -56,7 +63,7 @@ const useElementsStore = defineStore('elements', () => {
         })
     }
 
-    return {elements, selectedElementIdx, insertElement, removeElement, setSelectedElement, setElementStyle, resetElements, setElementName}
+    return {stage, elements, selectedElementIdx, setStage, insertElement, removeElement, setSelectedElement, setElementStyle, resetElements, setElementName}
 });
 
 export type {ElementD, ElementType};

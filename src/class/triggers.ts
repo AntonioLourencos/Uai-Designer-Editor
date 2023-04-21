@@ -1,6 +1,6 @@
 import Konva from 'konva';
 import Environment from './environment';
-import useElementsStore, { ElementD, ElementType } from '../store/elements';
+import useElementsStore, { ElementD } from '../store/elements';
 import { Layer } from 'konva/lib/Layer';
 import { Stage } from 'konva/lib/Stage';
 import useFocusStore from '../store/focus';
@@ -16,6 +16,15 @@ class Trigger extends Environment {
         this.layer = this.newLayer();
         this.shapeSelection();
         this.listenEvents();
+        this.listenShapeClick();
+    }
+
+    listenShapeClick() {
+        const layerRef = this.layer;
+        const focusStore = useFocusStore();
+        this.layer.on('mouseup', (e) => {
+            focusStore.setActionShape({name: 'Propriedades', shape: e.target});
+        });
     }
 
     initStage() {
@@ -102,8 +111,7 @@ class Trigger extends Environment {
         // insert transform rotate, resize
         const tr = new Konva.Transformer();
         const stageRef = this.stage;
-        const focusStore = useFocusStore();
-
+        
 
         this.layer.add(tr);
 
@@ -173,7 +181,9 @@ class Trigger extends Environment {
                 width: Math.abs(x2 - x1),
                 height: Math.abs(y2 - y1),
             });
+
         });
+        // focusStore.setActionShape({ name: 'Propriedades', shape: e.target });
 
         this.stage.on('mouseup touchend', (e) => {
             // do nothing if we didn't start selection
@@ -190,50 +200,47 @@ class Trigger extends Environment {
             var box = selectionRectangle.getClientRect();
             var selected = shapes.filter((shape) => Konva.Util.haveIntersection(box, shape.getClientRect()));
             tr.nodes(selected);
-            useFocusStore().setActionShape({ name: 'Ações' });
         });
 
         // clicks should select/deselect shapes
         this.stage.on('mousedown click tap', async function (e) {
-            focusStore.setActionShape({ name: 'Propriedades', shape: e.target });
-            setTimeout(() => {
-                // if we are selecting with rect, do nothing
-                if (selectionRectangle.visible()) {
-                    return;
-                }
-    
-                if (isPainting || e.target === stageRef) {
-                    tr.nodes([]);
-                    return;
-                }
-    
-    
-                // do nothing if clicked NOT on our rectangles
-                if (!e.target.hasName('shape')) {
-                    return;
-                }
-    
-                // do we pressed shift or ctrl?
-                const metaPressed = e.evt.shiftKey || e.evt.ctrlKey || e.evt.metaKey;
-                const isSelected = tr.nodes().indexOf(e.target) >= 0;
-    
-                if (!metaPressed && !isSelected) {
-                    // if no key pressed and the node is not selected
-                    // select just one
-                    tr.nodes([e.target]);
-                } else if (metaPressed && isSelected) {
-                    // if we pressed keys and node was selected
-                    // we need to remove it from selection:
-                    const nodes = tr.nodes().slice(); // use slice to have new copy of array
-                    // remove node from array
-                    nodes.splice(nodes.indexOf(e.target), 1);
-                    tr.nodes(nodes);
-                } else if (metaPressed && !isSelected) {
-                    // add the node into selection
-                    const nodes = tr.nodes().concat([e.target]);
-                    tr.nodes(nodes);
-                }
-            }, 100);
+            // if we are selecting with rect, do nothing
+            if (selectionRectangle.visible()) {
+                return;
+            }
+
+            if (isPainting || e.target === stageRef) {
+                tr.nodes([]);
+                return;
+            }
+
+            // do nothing if clicked NOT on our rectangles
+            if (!e.target.hasName('shape')) {
+                return;
+            }
+
+            // do we pressed shift or ctrl?
+            const metaPressed = e.evt.shiftKey || e.evt.ctrlKey || e.evt.metaKey;
+            const isSelected = tr.nodes().indexOf(e.target) >= 0;
+
+            if (!metaPressed && !isSelected) {
+                // if no key pressed and the node is not selected
+                // select just one
+                tr.nodes([e.target]);
+            } else if (metaPressed && isSelected) {
+                // if we pressed keys and node was selected
+                // we need to remove it from selection:
+                const nodes = tr.nodes().slice(); // use slice to have new copy of array
+                // remove node from array
+                nodes.splice(nodes.indexOf(e.target), 1);
+                tr.nodes(nodes);
+            } else if (metaPressed && !isSelected) {
+                // add the node into selection
+                const nodes = tr.nodes().concat([e.target]);
+                tr.nodes(nodes);
+            }
+        
+       
         });
     }
 }

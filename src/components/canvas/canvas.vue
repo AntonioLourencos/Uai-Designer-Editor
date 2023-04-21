@@ -3,13 +3,16 @@ import { computed, onMounted, ref } from 'vue';
 import TriggerEvents from '../../class/triggers';
 import useFocusStore from '../../store/focus';
 import useStatusStore from '../../store/status';
+import useElementsStore from '../../store/elements';
 
 const focusStore = useFocusStore();
 const statusStore = useStatusStore();
+const elementStore = useElementsStore();
 const paintMode = computed(() => statusStore.paint.paintMode);
 
 onMounted(() => {
-    new TriggerEvents();
+    const trigger = new TriggerEvents();
+    elementStore.setStage(trigger.stage);
 });
 
 const setFocus = (e: MouseEvent) => {
