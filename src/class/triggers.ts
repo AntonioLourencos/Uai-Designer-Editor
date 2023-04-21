@@ -200,6 +200,9 @@ class Trigger extends Environment {
             var box = selectionRectangle.getClientRect();
             var selected = shapes.filter((shape) => Konva.Util.haveIntersection(box, shape.getClientRect()));
             tr.nodes(selected);
+
+            useFocusStore().setActionShape({ name: 'Ações' });
+
         });
 
         // clicks should select/deselect shapes
@@ -252,6 +255,9 @@ class Trigger extends Environment {
                     const nodes = tr.nodes().concat([e.target]);
                     tr.nodes(nodes);
                 }
+
+                // when click shape
+                useFocusStore().setActionShape({ name: 'Propriedades', shape: text });
             });
         });
     }
@@ -344,6 +350,7 @@ class Trigger extends Environment {
             var box = selectionRectangle.getClientRect();
             var selected = shapes.filter((shape) => Konva.Util.haveIntersection(box, shape.getClientRect()));
             tr.nodes(selected);
+            useFocusStore().setActionShape({ name: 'Ações' });
         });
 
         // clicks should select/deselect shapes
@@ -384,6 +391,8 @@ class Trigger extends Environment {
                 const nodes = tr.nodes().concat([e.target]);
                 tr.nodes(nodes);
             }
+
+            useFocusStore().setActionShape({ name: 'Propriedades', shape: e.target });
         });
     }
 }
