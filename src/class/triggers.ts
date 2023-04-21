@@ -3,6 +3,7 @@ import Environment from './environment';
 import useElementsStore, { ElementD, ElementType } from '../store/elements';
 import { Layer } from 'konva/lib/Layer';
 import { Stage } from 'konva/lib/Stage';
+import useFocusStore from '../store/focus';
 
 class Trigger extends Environment {
     layer: Layer;
@@ -86,6 +87,18 @@ class Trigger extends Environment {
         });
         this.layer.add(selectionRectangle);
 
+        // blur events
+        useFocusStore().$subscribe((mutation, value) => {
+            const focusedEl = value.lastFocusElement as HTMLDivElement;
+            if(focusedEl.id != 'environment') {
+                const isCanvas = focusedEl.classList.contains('konvajs-content') || focusedEl.localName == 'canvas';
+                if(!isCanvas) {
+                    tr.nodes([]);
+                    selectionRectangle.visible(false);
+                }
+            }
+        });
+
         var x1: number, y1: number, x2, y2;
         this.stage.on('mousedown touchstart', (e) => {
           // do nothing if we mousedown on any shape
@@ -137,13 +150,11 @@ class Trigger extends Environment {
             Konva.Util.haveIntersection(box, shape.getClientRect())
           );
           tr.nodes(selected);
-
-          console.log(this.stage)
         });
   
         // clicks should select/deselect shapes
         const stageRef = this.stage;
-        this.stage.on('click tap', function (e) {
+        this.stage.on('mousedown click tap', function (e) {
           // if we are selecting with rect, do nothing
           if (selectionRectangle.visible()) {
             return;
