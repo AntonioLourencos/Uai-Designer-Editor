@@ -71,6 +71,8 @@ class Trigger extends Environment {
                 shape = new Konva.Circle({
                     ...defaultProps,
                     name: 'shape',
+                    y: 100,
+                    x: 100,
                 });
                 break;
             case 'rectangle':
@@ -126,6 +128,7 @@ class Trigger extends Environment {
         });
 
         var x1: number, y1: number, x2, y2;
+        
         this.stage.on('mousedown touchstart', (e) => {
             // do nothing if we mousedown on any shape
             if (isPainting || e.target !== this.stage) {
