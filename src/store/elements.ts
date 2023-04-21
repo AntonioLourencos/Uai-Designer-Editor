@@ -9,7 +9,9 @@ interface ElementD {
     name?: string;
 }
 
-type ElementType = 'rectangle' | 'line' | 'text' | 'circle' | 'triangle' | 'paint';
+type ElementType = 'rectangle';
+
+const defaultShapes : ElementType[] = ['rectangle'];
 
 const useElementsStore = defineStore('elements', () => {
     const elements = ref<ElementD[]>([]);
@@ -60,4 +62,5 @@ const useElementsStore = defineStore('elements', () => {
 });
 
 export type {ElementD, ElementType};
+export {defaultShapes};
 export default useElementsStore;

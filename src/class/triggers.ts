@@ -1,6 +1,6 @@
 import Konva from 'konva';
 import Environment from './environment';
-import useElementsStore, { ElementD, ElementType } from '../store/elements';
+import useElementsStore, { ElementD, ElementType, defaultShapes } from '../store/elements';
 import { Layer } from 'konva/lib/Layer';
 import { Stage } from 'konva/lib/Stage';
 import useFocusStore from '../store/focus';
@@ -144,7 +144,9 @@ class Trigger extends Environment {
             selectionRectangle.visible(false);
           });
   
-          var shapes = this.stage.find('.rectangle');
+          var shapes = this.stage.find((shape : any) => {
+            return defaultShapes.includes(shape.attrs.name);
+          });
           var box = selectionRectangle.getClientRect();
           var selected = shapes.filter((shape) =>
             Konva.Util.haveIntersection(box, shape.getClientRect())
@@ -167,7 +169,7 @@ class Trigger extends Environment {
           }
   
           // do nothing if clicked NOT on our rectangles
-          if (!e.target.hasName('rectangle')) {
+          if (!e.target.hasName(defaultShapes)) {
             return;
           }
   
