@@ -164,6 +164,12 @@ class CtxMenuOptions {
             }
         });
     }
+
+    static centerDocument() {
+        const paper = document.querySelector('.paper') as HTMLDivElement;
+        paper.style.setProperty('transform', 'scale(1) translate(0, 0)');
+        console.log(paper) 
+    }
 }
 </script>
 
@@ -204,6 +210,10 @@ class CtxMenuOptions {
 
             <div class="button icon" title="Exportar">
                 <i class="fas fa-download"></i>
+            </div>
+
+            <div class="button icon no-ctx" title="Centralizar documento" :onclick="CtxMenuOptions.centerDocument">
+                <i class="fas fa-square"></i>
             </div>
 
             <div class="ctx-menu" :style="{ display: ctxMenu == 5 ? 'block' : 'none' }">
