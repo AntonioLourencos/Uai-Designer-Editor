@@ -2,12 +2,14 @@ import interact from 'interactjs';
 import useElementsStore from '../store/elements';
 
 abstract class Environment {
+    canvas: HTMLDivElement;
     paper: HTMLDivElement;
     environment: HTMLDivElement;
 
-    constructor(environment: HTMLDivElement) {
-        this.environment = environment;
-        this.paper = environment.querySelector('.paper') as HTMLDivElement;
+    constructor() {
+        this.environment = document.querySelector('#environment') as HTMLDivElement;
+        this.paper = this.environment.querySelector('.paper') as HTMLDivElement;
+        this.canvas = this.environment.querySelector('#canvas') as HTMLDivElement;
         this.paper.style.transform = 'scale(1) translate(0px, 0px)';
         this.disableDefaultBrowserZoom();
         this.scale();

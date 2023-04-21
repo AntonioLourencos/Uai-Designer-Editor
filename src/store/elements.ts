@@ -2,7 +2,8 @@ import { defineStore } from "pinia";
 import { CSSProperties, ref } from "vue";
 
 interface ElementD {
-    type: ElementType
+    type: ElementType;
+    action?: 'create' | 'update' | 'group';
     style?: CSSProperties;
     text?: string;
     name?: string;
@@ -40,7 +41,7 @@ const useElementsStore = defineStore('elements', () => {
     }
     
     function insertElement(action: ElementD) {
-        elements.value.push(action);
+        elements.value.push({...action, action: 'create'});
     }
 
     function removeElement(index: number) {

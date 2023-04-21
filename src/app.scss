@@ -216,14 +216,14 @@ body {
     flex-grow: 1;
     overflow: hidden;
     position: relative;
-    background: #ccc url('assets/img/bg02.png') repeat;
+    background: #e4e4e4 url('assets/img/bg02.png') repeat;
     background-size: 80 px;
     width: -webkit-fill-available;
     justify-content: center;
     align-items: center;
 
 
-    canvas {
+    #canvas {
         position: absolute;
         width: -webkit-fill-available;
         height: inherit;
