@@ -58,11 +58,17 @@ class Trigger extends Environment {
         let shape;
 
         switch (props.type) {
+            case 'circle':
+                shape = new Konva.Circle({
+                    ...defaultProps,
+                    name: 'shape'
+                });
+            break;
             case 'rectangle':
             default:
                 shape = new Konva.Rect({
                     ...defaultProps,
-                    name: 'rectangle'
+                    name: 'shape'
                 });
         }
         this.layer.add(shape);
@@ -144,9 +150,7 @@ class Trigger extends Environment {
             selectionRectangle.visible(false);
           });
   
-          var shapes = this.stage.find((shape : any) => {
-            return defaultShapes.includes(shape.attrs.name);
-          });
+          var shapes = this.stage.find('.shape');
           var box = selectionRectangle.getClientRect();
           var selected = shapes.filter((shape) =>
             Konva.Util.haveIntersection(box, shape.getClientRect())
@@ -169,11 +173,9 @@ class Trigger extends Environment {
           }
   
           // do nothing if clicked NOT on our rectangles
-          defaultShapes.forEach(shape => {
-              if (!e.target.hasName(shape)) {
-                return;
-              }
-          });
+          if (!e.target.hasName('shape')) {
+            return;
+          }
   
           // do we pressed shift or ctrl?
           const metaPressed = e.evt.shiftKey || e.evt.ctrlKey || e.evt.metaKey;
