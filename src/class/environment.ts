@@ -1,109 +1,17 @@
-import useElementsStore from '../../store/elements';
 import interact from 'interactjs';
-import useStatusStore from '../../store/status';
-import { computed } from 'vue';
+import useElementsStore from '../store/elements';
 
-class Trigger {
+abstract class Environment {
     paper: HTMLDivElement;
-    canvas: HTMLDivElement;
+    environment: HTMLDivElement;
 
-    constructor(canvas: HTMLDivElement) {
-        this.canvas = canvas;
-        this.paper = canvas.querySelector('.paper') as HTMLDivElement;
-
+    constructor(environment: HTMLDivElement) {
+        this.environment = environment;
+        this.paper = environment.querySelector('.paper') as HTMLDivElement;
         this.paper.style.transform = 'scale(1) translate(0px, 0px)';
         this.disableDefaultBrowserZoom();
         this.scale();
-        this.activeElement();
-        // theres a bug with this
         this.positionPaper();
-        this.canvasElement();
-    }
-
-    canvasElement() {
-        const canvas = document.querySelector('canvas') as HTMLCanvasElement;
-        const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
-        // define canvas size
-        let paperSize: any = getComputedStyle(this.paper);
-        paperSize = {
-            width: paperSize.width,
-            height: paperSize.height,
-        };
-        canvas.width = parseInt(paperSize.width);
-        canvas.height = parseInt(paperSize.height);
-
-        // prevent content menu
-        canvas.addEventListener('contextmenu', (e) => {
-            e.preventDefault();
-        });
-        // drawings methods
-        ctx.lineWidth = 5;
-        ctx.lineCap = 'round';
-        ctx.lineJoin = 'round';
-        ctx.strokeStyle = 'black';
-
-        const canvasRect = canvas.getBoundingClientRect();
-
-        // Definindo uma variável para rastrear o estado do mouse
-        const statusStore = useStatusStore();
-        statusStore.$subscribe((_, value) => {
-            // Adicionando um ouvinte de evento ao canvas para iniciar o desenho
-            console.log(value.paint.paintMode);
-            if (value.paint.paintMode) {
-                canvas.addEventListener('mousedown', (e) => {
-                    statusStore.setIsDrawing(true);
-                    ctx.beginPath();
-                    const x = e.clientX - canvasRect.left - window.pageXOffset;
-                    const y = e.clientY - canvasRect.top - window.pageYOffset;
-                    ctx.moveTo(x, y);
-                });
-
-                // Adicionando um ouvinte de evento ao canvas para continuar o desenho
-                canvas.addEventListener('mousemove', (e) => {
-                    if (value.paint.paintMode && value.paint.isDrawing) {
-                        console.log('opa')
-                        const x = e.clientX - canvasRect.left - window.pageXOffset;
-                        const y = e.clientY - canvasRect.top - window.pageYOffset;
-                        ctx.lineTo(x, y);
-                        ctx.stroke();
-                    }
-                });
-
-                // Adicionando um ouvinte de evento ao canvas para finalizar o desenho
-                canvas.addEventListener('mouseup', () => {
-                    if (value.paint.paintMode && value.paint.isDrawing) {
-                        statusStore.setIsDrawing(false);
-                        const imageUrl = canvas.toDataURL();
-                        console.log(imageUrl);
-                    }
-                });
-            }
-        });
-    }
-
-    activeElement() {
-        this.paper.addEventListener('click', () => {
-            useElementsStore().setSelectedElement(undefined);
-        });
-        useElementsStore().$subscribe((mutation, newValue) => {
-            const value = newValue.selectedElementIdx;
-            const elements = this.paper.querySelectorAll(`.element`);
-            // detect active element
-            elements.forEach((el) => {
-                const element = el as HTMLDivElement;
-                if (element.dataset.id == value) {
-                    element.classList.add('active');
-                } else {
-                    element.classList.remove('active');
-                }
-            });
-
-            const hasAnyActive = Array.from(elements).find((element) => element.classList.contains('myClass'));
-            const resizerContainer = document.querySelector('.resizer-container') as HTMLDivElement;
-            if (resizerContainer && !hasAnyActive) {
-                resizerContainer.style.display = 'none';
-            }
-        });
     }
 
     disableDefaultBrowserZoom() {
@@ -131,7 +39,7 @@ class Trigger {
     }
 
     positionPaper() {
-        const draggable = this.canvas;
+        const draggable = this.environment;
         document.addEventListener('keydown', (e: KeyboardEvent) => {
             if (e.code == 'Space') {
                 interact(draggable).draggable({
@@ -194,14 +102,13 @@ class Trigger {
                     // Decrease the scale factor by 0.1
                     scaleKey -= 0.1;
                 }
-
                 // Apply the new scale factor to the element
                 scaleKey = Math.max(defineScales.min, Math.min(defineScales.max, scaleKey));
                 this.paper.style.transform = `scale(${scaleKey})`;
                 useElementsStore().setSelectedElement(undefined);
             }
         });
-        this.canvas.addEventListener('mousewheel', (event) => {
+        this.environment.addEventListener('mousewheel', (event) => {
             if ((event as WheelEvent).ctrlKey) {
                 // Get the current zoom scale
                 let currentScale = parseFloat(this.paper.style.transform.replace('scale(', '').replace(')', ''));
@@ -219,6 +126,7 @@ class Trigger {
             }
         });
     }
+
 }
 
-export default Trigger;
+export default Environment;

@@ -62,15 +62,14 @@ function defineCtxMenuOnClick() {
 class CtxMenuOptions {
     static insertShape(type: ElementType) {
         switch (type) {
-            case 'rectangle':
-                useElementsStore().insertElement({ type: 'rectangle' });
-                break;
+            case 'paint':
+                // to do
+            break;
             case 'text':
                 useElementsStore().insertElement({ type: 'text', text: 'Insira seu texto...' });
                 break;
-            case 'circle':
-                useElementsStore().insertElement({ type: 'circle' });
-                break;
+            default:
+                useElementsStore().insertElement({ type });
         }
     }
 
@@ -184,6 +183,7 @@ class CtxMenuOptions {
             <div class="ctx-menu" :style="{ display: ctxMenu == 0 ? 'block' : 'none' }">
                 <li :onclick="() => CtxMenuOptions.insertShape('rectangle')">Retângulo</li>
                 <li :onclick="() => CtxMenuOptions.insertShape('circle')">Círculo</li>
+                <li :onclick="() => CtxMenuOptions.insertShape('triangle')">Triângulo</li>
             </div>
 
             <div class="ctx-menu" :style="{ display: ctxMenu == 2 ? 'block' : 'none' }">

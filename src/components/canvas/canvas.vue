@@ -2,12 +2,11 @@
 import { storeToRefs } from 'pinia';
 import useElementsStore from '../../store/elements';
 import { computed, onMounted, ref } from 'vue';
-import TriggerEvents from './triggers';
-import DefineElement from '../../class/element';
+import TriggerEvents from '../../class/triggers';
 import useFocusStore from '../../store/focus';
 import useStatusStore from '../../store/status';
 
-const canvas = ref<Element | undefined>(undefined);
+const environment = ref<Element | undefined>(undefined);
 
 const focusStore = useFocusStore();
 const statusStore = useStatusStore();
@@ -16,16 +15,9 @@ const paintMode = computed(() => statusStore.paint.paintMode);
 const elementsStore = useElementsStore();
 const { elements } = storeToRefs(elementsStore);
 
-elementsStore.$subscribe((mutation, value) => {
-    value.elements.forEach((element, index) => {
-        const elementEl = document.querySelector(`.paper .element.${element.type}[data-id="${index}"]`) as Element;
-        new DefineElement(elementEl);
-    });
-});
-
 onMounted(() => {
-    if (canvas.value) {
-        new TriggerEvents(canvas.value as HTMLDivElement);
+    if (environment.value) {
+        new TriggerEvents(environment.value as HTMLDivElement);
     }
 });
 
@@ -43,7 +35,7 @@ const setFocus = (e: MouseEvent) => {
 </script>
 
 <template>
-    <div id="canvas" ref="canvas" :onclick="setFocus">
+    <div id="environment" ref="environment" :onclick="setFocus">
         <div class="paper">
             <!-- :style="{ display: paintMode ? 'block' : 'none' }" -->
             <canvas :style="{cursor: paintMode ? 'crosshair' : 'auto'}"> </canvas>

@@ -13,7 +13,7 @@
     "@types/sortablejs": "^1.15.1",
     "dom-to-image": "^2.6.0",
     "interactjs": "^1.10.17",
-    "move-rotate-resizer": "^1.0.5",
+    "konva": "^9.0.1",
     "pinia": "^2.0.34",
     "sortablejs": "^1.15.0",
     "vue": "^3.2.47"
