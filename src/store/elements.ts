@@ -17,6 +17,16 @@ const useElementsStore = defineStore('elements', () => {
     const elements = ref<ElementD[]>([]);
     const selectedElementIdx = ref<string | undefined>(undefined);
 
+    const CreateEvent = new CustomEvent("pinia-create-element", {
+        cancelable: false,
+        bubbles: true,
+        composed: true,
+        detail: {
+            index: elements.value.length - 1,
+            element:elements.value[elements.value.length - 1]
+        }
+    })
+    
     function setStage(payload: Stage) {
         stage.value = payload;
         console.log('Stage injected');
@@ -49,6 +59,11 @@ const useElementsStore = defineStore('elements', () => {
     
     function insertElement(action: ElementD) {
         elements.value.push({...action, action: 'create'});
+
+        CreateEvent.detail.index = elements.value.length - 1
+        CreateEvent.detail.element = elements.value[elements.value.length - 1]
+
+        window.dispatchEvent(CreateEvent);
     }
 
     function removeElement(index: number) {
@@ -63,7 +78,7 @@ const useElementsStore = defineStore('elements', () => {
         })
     }
 
-    return {stage, elements, selectedElementIdx, setStage, insertElement, removeElement, setSelectedElement, setElementStyle, resetElements, setElementName}
+    return { stage, elements, selectedElementIdx, setStage, insertElement, removeElement, setSelectedElement, setElementStyle, resetElements, setElementName}
 });
 
 export type {ElementD, ElementType};
