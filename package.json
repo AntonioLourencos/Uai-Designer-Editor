@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc && vite build",
-    "postbuild":"serve -s dist",
+    "start:build":"serve -s dist",
     "preview": "vite preview"
   },
   "dependencies": {
